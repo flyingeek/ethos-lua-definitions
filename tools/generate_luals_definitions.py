@@ -56,6 +56,7 @@ class Parameter:
     name: str
     type_name: str
     description: str = ""
+    optional: bool = False
 
 
 @dataclass
@@ -202,12 +203,29 @@ def parse_since(memdoc_html: str) -> str | None:
     return clean_doc(match.group(1)) if match else None
 
 
+def parse_deprecated(memdoc_html: str) -> bool:
+    # Restrict deprecation detection to explicit Doxygen deprecated sections.
+    # This avoids false positives from cross-reference tooltips that happen to
+    # contain the word "deprecated" in examples.
+    return bool(re.search(r'<dl class="section deprecated">\s*<dt>Deprecated</dt>', memdoc_html, flags=re.S | re.I))
+
+
 def parse_type_and_description(text: str) -> tuple[str, str]:
     text = strip_tags(text)
     match = re.match(r"^\(([^)]*)\)\s*:?[ ]*(.*)$", text)
     if not match:
         return "any", text
     return normalize_type(match.group(1)), match.group(2).strip()
+
+
+def parse_optional_flag(text: str) -> bool:
+    lowered = strip_tags(text).lower()
+    return (
+        "optional" in lowered
+        or "default=" in lowered
+        or "default =" in lowered
+        or "default is" in lowered
+    )
 
 
 def parse_parameters(memdoc_html: str) -> list[Parameter]:
@@ -235,13 +253,21 @@ def parse_parameters(memdoc_html: str) -> list[Parameter]:
                         name=safe_identifier(spec.group(1)),
                         type_name=normalize_type(spec.group(2)),
                         description=description,
+                        optional=parse_optional_flag(spec.group(2)),
                     )
                 )
             if combined_specs:
                 continue
 
         type_name, description = parse_type_and_description(info_text)
-        parameters.append(Parameter(name=safe_identifier(name_text), type_name=type_name, description=description))
+        parameters.append(
+            Parameter(
+                name=safe_identifier(name_text),
+                type_name=type_name,
+                description=description,
+                optional=parse_optional_flag(info_text),
+            )
+        )
 
     deduped: list[Parameter] = []
     seen: set[tuple[str, str, str]] = set()
@@ -428,7 +454,7 @@ def parse_items(page_html: str, owner: str) -> tuple[list[Item], dict[str, list[
         end = matches[index + 1].start() if index + 1 < len(matches) else len(page_html)
         chunk = page_html[match.start():end]
         title_match = re.search(r'<h2 class="memtitle">.*?</span>(.*?)</h2>', chunk, flags=re.S)
-        memdoc_match = re.search(r'<div class="memdoc">(.*)</div>\s*</div>\s*$', chunk, flags=re.S)
+        memdoc_match = re.search(r'<div class="memdoc">(.*?)</div>\s*</div>', chunk, flags=re.S)
         if not title_match or not memdoc_match:
             continue
 
@@ -441,15 +467,17 @@ def parse_items(page_html: str, owner: str) -> tuple[list[Item], dict[str, list[
         memdoc_html = memdoc_match.group(1)
         item_returns, item_structs = parse_returns(memdoc_html, owner, item_name)
         structs.update(item_structs)
+        description = parse_first_paragraph(memdoc_html)
+        deprecated = parse_deprecated(memdoc_html) or "(deprecated" in description.lower() or description.strip().lower() == "deprecated"
 
         items.append(
             Item(
                 owner=owner,
                 name=item_name,
                 kind=item_kind,
-                description=parse_first_paragraph(memdoc_html),
+                description=description,
                 since=parse_since(memdoc_html),
-                deprecated="deprecated" in memdoc_html.lower(),
+                deprecated=deprecated,
                 params=parse_parameters(memdoc_html),
                 returns=item_returns,
                 return_struct=next(iter(item_structs), None),
@@ -516,7 +544,8 @@ def emit_comment(lines: list[str], text: str) -> None:
 
 def emit_param(lines: list[str], parameter: Parameter) -> None:
     suffix = f" # {parameter.description}" if parameter.description else ""
-    lines.append(f"---@param {parameter.name} {parameter.type_name}{suffix}")
+    optional_marker = "?" if parameter.optional else ""
+    lines.append(f"---@param {parameter.name}{optional_marker} {parameter.type_name}{suffix}")
 
 
 def emit_return(lines: list[str], return_value: ReturnValue) -> None:
