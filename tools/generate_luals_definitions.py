@@ -454,7 +454,7 @@ def parse_items(page_html: str, owner: str) -> tuple[list[Item], dict[str, list[
         end = matches[index + 1].start() if index + 1 < len(matches) else len(page_html)
         chunk = page_html[match.start():end]
         title_match = re.search(r'<h2 class="memtitle">.*?</span>(.*?)</h2>', chunk, flags=re.S)
-        memdoc_match = re.search(r'<div class="memdoc">(.*?)</div>\s*</div>', chunk, flags=re.S)
+        memdoc_match = re.search(r'<div class="memdoc">(.*)</div>\s*</div>', chunk, flags=re.S)
         if not title_match or not memdoc_match:
             continue
 
@@ -469,6 +469,14 @@ def parse_items(page_html: str, owner: str) -> tuple[list[Item], dict[str, list[
         structs.update(item_structs)
         description = parse_first_paragraph(memdoc_html)
         deprecated = parse_deprecated(memdoc_html) or "(deprecated" in description.lower() or description.strip().lower() == "deprecated"
+        params = parse_parameters(memdoc_html)
+
+        # Ethos accepts nil for form.add* rect parameters even when docs omit it.
+        if owner == "form" and item_kind == "function" and item_name.startswith("add"):
+            for parameter in params:
+                if parameter.name == "rect":
+                    parameter.type_name = "Rect|nil"
+                    parameter.optional = True
 
         items.append(
             Item(
@@ -478,7 +486,7 @@ def parse_items(page_html: str, owner: str) -> tuple[list[Item], dict[str, list[
                 description=description,
                 since=parse_since(memdoc_html),
                 deprecated=deprecated,
-                params=parse_parameters(memdoc_html),
+                params=params,
                 returns=item_returns,
                 return_struct=next(iter(item_structs), None),
             )
