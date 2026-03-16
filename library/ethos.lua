@@ -1728,11 +1728,9 @@ function form.addBooleanField(line, rect, getValue, setValue) end
 ---Since: 1.5.10
 ---@param line FormLine # the line where the field should be added
 ---@param rect? Rect|nil # the coordinates
----@param text? string # the displayed text
----@param icon? Mask # the displayed icon
----@param press fun(...):any # the function which will be called on button press
+---@param params table # table with elements: text (string, optional), icon (Mask, optional), press (function)
 ---@return LuaButton result # The new button
-function form.addButton(line, rect, text, icon, press) end
+function form.addButton(line, rect, params) end
 
 ---Add a choice field to the current form.
 ---Since: 1.1.0
@@ -1741,7 +1739,7 @@ function form.addButton(line, rect, text, icon, press) end
 ---@param values table # table of all possible values
 ---@param getValue fun(...):any # the function which will return the current value
 ---@param setValue fun(...):any # the function which will be called on value change
----@return ChoiceLib result # The new field
+---@return FormFieldLib result # The new field
 function form.addChoiceField(line, rect, values, getValue, setValue) end
 
 ---Add a color field to the current form.
@@ -1756,6 +1754,7 @@ function form.addColorField(line, rect, getValue, setValue) end
 ---Add an Expansion Panel to the current form.
 ---Since: 1.4.0
 ---@param text string # the displayed text
+---@return FormFieldLib result # The new field
 function form.addExpansionPanel(text) end
 
 ---Add a file field to the current form.
@@ -1774,6 +1773,7 @@ function form.addFileField(line, rect, path, fileType, getValue, setValue) end
 ---@param line FormLine # the line where the widget should be added
 ---@param rect? Rect|nil # the coordinates
 ---@param index number # the function switch index
+---@return FormFieldLib result # The new field
 function form.addFunctionSwitch(line, rect, index) end
 
 ---Add a new line to the current form.
@@ -1792,7 +1792,7 @@ function form.addLine(label, panel, separator) end
 ---@param max integer # the max value
 ---@param getValue fun(...):any # the function which will return the current value
 ---@param setValue fun(...):any # the function which will be called on value change
----@return NumberEditLib result # The new field
+---@return FormFieldLib result # The new field
 function form.addNumberField(line, rect, min, max, getValue, setValue) end
 
 ---Add a pot widget.
@@ -1801,18 +1801,21 @@ function form.addNumberField(line, rect, min, max, getValue, setValue) end
 ---@param rect? Rect|nil # the coordinates
 ---@param index number # the pot index
 ---@param type string # pot type, can take the values "pot" (default), "slider", "left" or "right"
+---@return FormFieldLib result # The new field
 function form.addPot(line, rect, index, type) end
 
 ---Add the radio hardware widget (sticks / pots / sliders / switches)
 ---Since: 1.6.3
 ---@param line FormLine # the line where the widget should be added
 ---@param rect? Rect|nil # the coordinates
+---@return FormFieldLib result # The new field
 function form.addRadioHardware(line, rect) end
 
 ---Add a rotary encoder widget.
 ---Since: 26.1.0
 ---@param line FormLine # the line where the widget should be added
 ---@param rect? Rect|nil # the coordinates
+---@return FormFieldLib result # The new field
 function form.addRotaryEncoder(line, rect) end
 
 ---Add a sensor field to the current form.
@@ -1833,7 +1836,7 @@ function form.addSensorField(line, rect, getValue, setValue, filterValue) end
 ---@param max integer # the max value
 ---@param getValue fun(...):any # the function which will return the current value
 ---@param setValue fun(...):any # the function which will be called on value change
----@return SliderLib result # The new field
+---@return FormFieldLib result # The new field
 function form.addSliderField(line, rect, min, max, getValue, setValue) end
 
 ---Add a source field to the current form.
@@ -1850,6 +1853,7 @@ function form.addSourceField(line, rect, getValue, setValue) end
 ---@param line FormLine # the line where the text should be added
 ---@param rect? Rect|nil # the coordinates
 ---@param text string # the displayed text
+---@return FormFieldLib result # The new field
 function form.addStaticText(line, rect, text) end
 
 ---Add a stick widget.
@@ -1858,6 +1862,7 @@ function form.addStaticText(line, rect, text) end
 ---@param rect? Rect|nil # the coordinates
 ---@param xIndex number # the horizontal analog index
 ---@param yIndex number # the vertical analog index
+---@return FormFieldLib result # The new field
 function form.addStick(line, rect, xIndex, yIndex) end
 
 ---Add a switch widget.
@@ -1866,6 +1871,7 @@ function form.addStick(line, rect, xIndex, yIndex) end
 ---@param rect? Rect|nil # the coordinates
 ---@param index number # the switch index
 ---@param type string # switch type, can take the values "lever" (default) or "push"
+---@return FormFieldLib result # The new field
 function form.addSwitch(line, rect, index, type) end
 
 ---Add a switch field to the current form.
@@ -1911,6 +1917,7 @@ function form.addTimeField(line, rect, getValue, setValue) end
 ---@param rect? Rect|nil # the coordinates
 ---@param index number # the trim index
 ---@param type string # trim type, can take the values "horizontal" (default) or "vertical"
+---@return FormFieldLib result # The new field
 function form.addTrim(line, rect, index, type) end
 
 ---Clear the current form.
@@ -1938,15 +1945,9 @@ function form.invalidate() end
 
 ---Open a dialog.
 ---Since: 1.1.0
----@param title string # the title of the dialog
----@param message string # the message of the dialog
----@param buttons table # the table of buttons, each button is a table with these keys: 'label' (string): the displayed text 'action' (function): the function which will be called on button press
----@param options number # text flags like TEXT_LEFT, TEXT_CENTERED, etc.
----@param wakeup fun(...):any # handler called at each loop
----@param paint fun(...):any # paint function
----@param closeWhenClickOutside any # close the dialog when clicking outside
+---@param params table # table with elements: title, message, buttons, options, wakeup, paint, closeWhenClickOutside
 ---@return Dialog result # Dialog
-function form.openDialog(title, message, buttons, options, wakeup, paint, closeWhenClickOutside) end
+function form.openDialog(params) end
 
 ---Open a wait dialog.
 ---Since: 1.5.10

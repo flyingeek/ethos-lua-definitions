@@ -302,16 +302,16 @@ def infer_return_from_context(owner: str, name: str, text: str) -> str | None:
         ("form", "addBitmapField"): "FormFieldLib",
         ("form", "addBooleanField"): "FormFieldLib",
         ("form", "addButton"): "LuaButton",
-        ("form", "addChoiceField"): "ChoiceLib",
+        ("form", "addChoiceField"): "FormFieldLib",
         ("form", "addColorField"): "FormFieldLib",
         ("form", "addExpansionPanel"): "ExpansionPanel",
         ("form", "addFileField"): "FormFieldLib",
         ("form", "addLine"): "FormLine",
-        ("form", "addNumberField"): "NumberEditLib",
+        ("form", "addNumberField"): "FormFieldLib",
         ("form", "addSensorField"): "FormFieldLib",
-        ("form", "addSliderField"): "SliderLib",
+        ("form", "addSliderField"): "FormFieldLib",
         ("form", "addSourceField"): "FormFieldLib",
-        ("form", "addStaticText"): "FrSkyStaticTextLib",
+        ("form", "addStaticText"): "FormFieldLib",
         ("form", "addSwitchField"): "FormFieldLib",
         ("form", "addTextButton"): "LuaButton",
         ("form", "addTextField"): "FormFieldLib",
@@ -366,6 +366,8 @@ def infer_return_from_context(owner: str, name: str, text: str) -> str | None:
         return "FormFieldLib"
     if lowered == "the new button":
         return "LuaButton"
+    if owner == "form" and name.startswith("add"):
+        return "FormFieldLib"
     return None
 
 
@@ -477,6 +479,31 @@ def parse_items(page_html: str, owner: str) -> tuple[list[Item], dict[str, list[
                 if parameter.name == "rect":
                     parameter.type_name = "Rect|nil"
                     parameter.optional = True
+
+            if not item_returns:
+                item_returns = [ReturnValue(name="result", type_name="FormFieldLib", description="The new field")]
+
+        # Ethos addButton last 3 args are passed as a single options table.
+        if owner == "form" and item_kind == "function" and item_name == "addButton":
+            params = [
+                Parameter(name="line", type_name="FormLine", description="the line where the field should be added"),
+                Parameter(name="rect", type_name="Rect|nil", description="the coordinates", optional=True),
+                Parameter(
+                    name="params",
+                    type_name="table",
+                    description="table with elements: text (string, optional), icon (Mask, optional), press (function)",
+                ),
+            ]
+
+        # Ethos openDialog is called with a single options table.
+        if owner == "form" and item_kind == "function" and item_name == "openDialog":
+            params = [
+                Parameter(
+                    name="params",
+                    type_name="table",
+                    description="table with elements: title, message, buttons, options, wakeup, paint, closeWhenClickOutside",
+                )
+            ]
 
         items.append(
             Item(
