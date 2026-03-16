@@ -1853,7 +1853,7 @@ function form.addSourceField(line, rect, getValue, setValue) end
 ---@param line FormLine # the line where the text should be added
 ---@param rect? Rect|nil # the coordinates
 ---@param text string # the displayed text
----@return FormFieldLib result # The new field
+---@return FrSkyStaticTextLib result # The new field
 function form.addStaticText(line, rect, text) end
 
 ---Add a stick widget.

@@ -495,6 +495,10 @@ def parse_items(page_html: str, owner: str) -> tuple[list[Item], dict[str, list[
                 ),
             ]
 
+        # addStaticText returns a FrSkyStaticTextLib, not a plain FormFieldLib.
+        if owner == "form" and item_kind == "function" and item_name == "addStaticText":
+            item_returns = [ReturnValue(name="result", type_name="FrSkyStaticTextLib", description="The new field")]
+
         # Ethos openDialog is called with a single options table.
         if owner == "form" and item_kind == "function" and item_name == "openDialog":
             params = [
