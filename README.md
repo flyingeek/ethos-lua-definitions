@@ -20,6 +20,8 @@ The generated output is:
 
 - `library/ethos.lua`: LuaLS-compatible annotations for modules, classes, methods, constants, and the documented Ethos-specific `os.*` additions.
 
+The VSCode plugin used to read those defininitions is [LuaLS](https://luals.github.io)
+
 ## Regenerate
 
 After placing `lua-doc/` in the repository root, run:
