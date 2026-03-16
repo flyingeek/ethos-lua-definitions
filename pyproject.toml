@@ -1,0 +1,19 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.backends.legacy:build"
+
+[project]
+name = "ethos-lua-definitions"
+version = "0.1.0"
+description = "Generate LuaLS annotations from the Ethos Doxygen HTML documentation"
+readme = "README.md"
+license = { file = "LICENSE" }
+requires-python = ">=3.8"
+dependencies = []
+
+[project.scripts]
+generate-ethos = "tools.generate_luals_definitions:main"
+
+[tool.setuptools.packages.find]
+where = ["."]
+include = ["tools*"]

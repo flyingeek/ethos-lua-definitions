@@ -1,0 +1,17 @@
+# Downloaded Ethos HTML documentation
+lua-doc/
+
+# macOS
+.DS_Store
+.AppleDouble
+.LSOverride
+Icon?
+._*
+.Spotlight-V100
+.Trashes
+.fseventsd
+
+# Editors and temporary files
+*.swp
+*.swo
+*~

@@ -1,0 +1,81 @@
+# ethos-lua-definitions
+
+LuaLS (`lua-language-server`) type annotations for the FrSky Ethos RC transmitter Lua scripting API.
+
+## What this provides
+
+A single file — `library/ethos.lua` — that is a `---@meta` LuaLS definition file. Add it to your
+LuaLS library path to get autocompletion, type checking, and hover documentation for all Ethos Lua
+APIs inside VS Code (or any editor with LuaLS support).
+
+## How to add to an Ethos Lua project
+
+1. Copy or symlink the `library/` directory into your project, or reference it by absolute path.
+2. Create (or update) `.luarc.json` in your project root:
+
+```json
+{
+  "Lua.runtime.version": "Lua 5.4",
+  "Lua.workspace.library": [
+    "/path/to/ethos-lua-definitions/library"
+  ]
+}
+```
+
+You can also clone the repo and point the path at the cloned location:
+
+```sh
+git clone https://github.com/flyingeek/ethos-lua-definitions.git
+```
+
+Then in `.luarc.json`:
+
+```json
+{
+  "Lua.runtime.version": "Lua 5.4",
+  "Lua.workspace.library": [
+    "/path/to/ethos-lua-definitions/library"
+  ]
+}
+```
+
+## What is annotated
+
+**Modules (global tables):**
+- `bluetooth` — Bluetooth API
+- `crsf` — CRSF sensor/channel access
+- `form` — UI form builder (widgets, lines, pages)
+- `glasses` — FPV glasses display
+- `lcd` — screen drawing (text, shapes, bitmaps)
+- `model` — model configuration (channels, curves, mixes, timers, logic switches, modules)
+- `multimodule` — multimodule sensor access
+- `serial` — serial port I/O
+- `simulator` — simulator detection helpers
+- `sport` — S.Port sensor/frame API
+- `storage` — key-value persistent storage
+- `system` — system info, version, memory, time
+
+**Classes returned by API calls:**
+`Bitmap`, `Channel`, `ChoiceLib`, `CrsfSensor`, `Curve`, `Dialog`, `ExpansionPanel`,
+`FormFieldLib`, `FormLine`, `FrSkyStaticTextLib`, `GlassesLayout`, `LogicSwitch`,
+`LuaBitmapBase`, `LuaButton`, `LuaCrsfSensor`, `LuaMultimoduleSensor`, `LuaSPortFrame`,
+`LuaSPortSensor`, `LuaSPortSerial`, `Module`, `MultimoduleSensor`, `NumberEditLib`,
+`SliderLib`, `Source`, `Timer`, `WaitDialog`
+
+**Global constants (205 total):**
+Constants such as `FONT_XS`, `FONT_S`, `FONT_L`, `FONT_XL`, `CATEGORY_SYSTEM`,
+`CATEGORY_OTHER`, `SLIDER_TYPE_VERTICAL`, `KEY_ENTER`, `KEY_EXIT`, `EVT_KEY_BREAK`,
+`COLOR_WHITE`, `COLOR_BLACK`, `INVERT`, `BOLD`, `LEFT`, `RIGHT`, `CENTER`, etc.
+These are exposed as bare Lua globals (not under a `base.` prefix).
+
+**`os` extensions:**
+Ethos adds `os.clock()`, `os.date()`, `os.exit()`, `os.time()` with Ethos-specific behaviour.
+
+## Notes for AI assistants
+
+- All constants are globals — use `FONT_XS` not `base.FONT_XS`.
+- `form.add*` functions return typed widget objects: e.g. `form.addButton()` → `LuaButton`,
+  `form.addNumberEdit()` → `NumberEditLib`, `form.addChoice()` → `ChoiceLib`.
+- `model.createCurve()` → `Curve`, `model.createTimer()` → `Timer`, etc.
+- `lcd` drawing functions take optional `Rect` (table `{x, y, w, h}`) or coordinate pairs.
+- A few return types fall back to `any` where the upstream HTML docs were too vague to infer.
