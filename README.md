@@ -58,4 +58,5 @@ Point LuaLS at the `library/` directory. For example, in `.luarc.json`:
 ## Notes
 
 - The documentation groups global constants under the `base` namespace, but Ethos examples use them as globals such as `FONT_XS` and `CATEGORY_SYSTEM`. The generated file therefore exposes them as globals.
+- `FONT_STD` is emitted as a standalone global constant.
 - A few return types in the HTML are underspecified, for example `The value read` or `The new field`. Where the docs were clear enough, the generator maps them to the corresponding Ethos classes; otherwise it falls back to `any`.

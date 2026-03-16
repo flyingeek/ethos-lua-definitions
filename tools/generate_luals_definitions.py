@@ -626,6 +626,17 @@ def emit_constant(lines: list[str], item: Item) -> None:
     lines.append("")
 
 
+def emit_missing_constants(lines: list[str], base_constants: list[Item]) -> None:
+    constant_names = {item.name for item in base_constants}
+
+    # Keep constants that exist in Ethos but may be missing from current docs.
+    if "FONT_STD" not in constant_names and "FONT_S" in constant_names:
+        lines.append("---STD Font")
+        lines.append("---@type integer")
+        lines.append("FONT_STD = 0")
+        lines.append("")
+
+
 def emit_struct(lines: list[str], struct_name: str, fields: list[Field]) -> None:
     lines.append(f"---@class {struct_name}")
     for field in fields:
@@ -706,6 +717,8 @@ def generate(doc_dir: Path, output_path: Path) -> None:
 
     for constant in base_constants:
         emit_constant(lines, constant)
+
+    emit_missing_constants(lines, base_constants)
 
     for module_name in module_names:
         if module_name == "base":

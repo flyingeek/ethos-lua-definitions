@@ -1675,6 +1675,10 @@ X_POSITIVE = 0
 ---@type integer
 YELLOW = 0
 
+---STD Font
+---@type integer
+FONT_STD = 0
+
 ---@class bluetooth
 bluetooth = {}
 

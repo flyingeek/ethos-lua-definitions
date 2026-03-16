@@ -62,8 +62,8 @@ Then in `.luarc.json`:
 `LuaSPortSensor`, `LuaSPortSerial`, `Module`, `MultimoduleSensor`, `NumberEditLib`,
 `SliderLib`, `Source`, `Timer`, `WaitDialog`
 
-**Global constants (205 total):**
-Constants such as `FONT_XS`, `FONT_S`, `FONT_L`, `FONT_XL`, `CATEGORY_SYSTEM`,
+**Global constants (206 total):**
+Constants such as `FONT_XS`, `FONT_S`, `FONT_STD`, `FONT_L`, `FONT_XL`, `CATEGORY_SYSTEM`,
 `CATEGORY_OTHER`, `SLIDER_TYPE_VERTICAL`, `KEY_ENTER`, `KEY_EXIT`, `EVT_KEY_BREAK`,
 `COLOR_WHITE`, `COLOR_BLACK`, `INVERT`, `BOLD`, `LEFT`, `RIGHT`, `CENTER`, etc.
 These are exposed as bare Lua globals (not under a `base.` prefix).
@@ -74,6 +74,7 @@ Ethos adds `os.clock()`, `os.date()`, `os.exit()`, `os.time()` with Ethos-specif
 ## Notes for AI assistants
 
 - All constants are globals — use `FONT_XS` not `base.FONT_XS`.
+- `FONT_STD` is included as a standalone global constant.
 - `form.add*` functions return typed widget objects: e.g. `form.addButton()` → `LuaButton`,
   `form.addNumberEdit()` → `NumberEditLib`, `form.addChoice()` → `ChoiceLib`.
 - `model.createCurve()` → `Curve`, `model.createTimer()` → `Timer`, etc.
