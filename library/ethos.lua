@@ -1683,6 +1683,22 @@ YELLOW = 0
 ---@type integer
 FONT_STD = 0
 
+---STD Bold Font
+---@type integer
+FONT_BOLD = 0
+
+---Touch Move
+---@type integer
+TOUCH_MOVE = 0
+
+---Touch Start
+---@type integer
+TOUCH_START = 0
+
+---Touch End
+---@type integer
+TOUCH_END = 0
+
 ---@class bluetooth
 bluetooth = {}
 

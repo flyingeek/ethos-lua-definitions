@@ -668,12 +668,31 @@ def emit_missing_constants(lines: list[str], base_constants: list[Item]) -> None
     constant_names = {item.name for item in base_constants}
 
     # Keep constants that exist in Ethos but may be missing from current docs.
-    if "FONT_STD" not in constant_names and "FONT_S" in constant_names:
+    if "FONT_STD" not in constant_names:
         lines.append("---STD Font")
         lines.append("---@type integer")
         lines.append("FONT_STD = 0")
         lines.append("")
-
+    if "FONT_BOLD" not in constant_names:
+        lines.append("---STD Bold Font")
+        lines.append("---@type integer")
+        lines.append("FONT_BOLD = 0")
+        lines.append("")
+    if "TOUCH_MOVE" not in constant_names:
+        lines.append("---Touch Move")
+        lines.append("---@type integer")
+        lines.append("TOUCH_MOVE = 0")
+        lines.append("")
+    if "TOUCH_START" not in constant_names:
+        lines.append("---Touch Start")
+        lines.append("---@type integer")
+        lines.append("TOUCH_START = 0")
+        lines.append("")
+    if "TOUCH_END" not in constant_names:
+        lines.append("---Touch End")
+        lines.append("---@type integer")
+        lines.append("TOUCH_END = 0")
+        lines.append("")
 
 def emit_struct(lines: list[str], struct_name: str, fields: list[Field]) -> None:
     lines.append(f"---@class {struct_name}")
