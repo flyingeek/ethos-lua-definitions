@@ -338,6 +338,10 @@ local LuaBitmapBase = {}
 ---@class LuaButton
 local LuaButton = {}
 
+---Give the focus to the button.
+---Since: 1.5.10
+function LuaButton:focus() end
+
 ---@class LuaCrsfSensor
 local LuaCrsfSensor = {}
 

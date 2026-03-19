@@ -720,6 +720,18 @@ def generate(doc_dir: Path, output_path: Path) -> None:
         class_items[class_name] = [item for item in items if item.kind == "function"]
         struct_defs.update(structs)
 
+    # Ethos LuaButton supports focus() even if some doc snapshots omit it.
+    if "LuaButton" in class_items and not any(item.name == "focus" for item in class_items["LuaButton"]):
+        class_items["LuaButton"].append(
+            Item(
+                owner="LuaButton",
+                name="focus",
+                kind="function",
+                description="Give the focus to the button.",
+                since="1.5.10",
+            )
+        )
+
     for module_name, file_name in module_pairs:
         items, structs = parse_items(read_text(doc_dir / file_name), module_name)
         struct_defs.update(structs)
