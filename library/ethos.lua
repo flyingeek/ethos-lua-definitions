@@ -1774,7 +1774,7 @@ function form.addFileField(line, rect, path, fileType, getValue, setValue) end
 
 ---Add a function switch widget.
 ---Since: 1.6.3
----@param line FormLine # the line where the widget should be added
+---@param line? FormLine|nil # the line where the widget should be added
 ---@param rect? Rect|nil # the coordinates
 ---@param index number # the function switch index
 ---@return FormFieldLib result # The new field
@@ -1783,7 +1783,7 @@ function form.addFunctionSwitch(line, rect, index) end
 ---Add a new line to the current form.
 ---Since: 1.1.0
 ---@param label string # the line label
----@param panel ExpansionPanel # an expansion panel where the line should be inserted
+---@param panel? ExpansionPanel|nil # an expansion panel where the line should be inserted
 ---@param separator? boolean # separator after the line
 ---@return FormLine line # line
 function form.addLine(label, panel, separator) end
@@ -1801,7 +1801,7 @@ function form.addNumberField(line, rect, min, max, getValue, setValue) end
 
 ---Add a pot widget.
 ---Since: 1.6.3
----@param line FormLine # the line where the widget should be added
+---@param line? FormLine|nil # the line where the widget should be added
 ---@param rect? Rect|nil # the coordinates
 ---@param index number # the pot index
 ---@param type string # pot type, can take the values "pot" (default), "slider", "left" or "right"
@@ -1810,14 +1810,14 @@ function form.addPot(line, rect, index, type) end
 
 ---Add the radio hardware widget (sticks / pots / sliders / switches)
 ---Since: 1.6.3
----@param line FormLine # the line where the widget should be added
+---@param line? FormLine|nil # the line where the widget should be added
 ---@param rect? Rect|nil # the coordinates
 ---@return FormFieldLib result # The new field
 function form.addRadioHardware(line, rect) end
 
 ---Add a rotary encoder widget.
 ---Since: 26.1.0
----@param line FormLine # the line where the widget should be added
+---@param line? FormLine|nil # the line where the widget should be added
 ---@param rect? Rect|nil # the coordinates
 ---@return FormFieldLib result # The new field
 function form.addRotaryEncoder(line, rect) end
@@ -1862,7 +1862,7 @@ function form.addStaticText(line, rect, text) end
 
 ---Add a stick widget.
 ---Since: 1.6.3
----@param line FormLine # the line where the widget should be added
+---@param line? FormLine|nil # the line where the widget should be added
 ---@param rect? Rect|nil # the coordinates
 ---@param xIndex number # the horizontal analog index
 ---@param yIndex number # the vertical analog index
@@ -1871,7 +1871,7 @@ function form.addStick(line, rect, xIndex, yIndex) end
 
 ---Add a switch widget.
 ---Since: 1.6.3
----@param line FormLine # the line where the widget should be added
+---@param line? FormLine|nil # the line where the widget should be added
 ---@param rect? Rect|nil # the coordinates
 ---@param index number # the switch index
 ---@param type string # switch type, can take the values "lever" (default) or "push"
@@ -1917,7 +1917,7 @@ function form.addTimeField(line, rect, getValue, setValue) end
 
 ---Add a trim widget.
 ---Since: 1.6.3
----@param line FormLine # the line where the widget should be added
+---@param line? FormLine|nil # the line where the widget should be added
 ---@param rect? Rect|nil # the coordinates
 ---@param index number # the trim index
 ---@param type string # trim type, can take the values "horizontal" (default) or "vertical"
@@ -1955,13 +1955,9 @@ function form.openDialog(params) end
 
 ---Open a wait dialog.
 ---Since: 1.5.10
----@param title string # the title of the dialog
----@param message string # the message of the dialog
----@param progress? boolean # adds a progress bar to the dialog
----@param wakeup fun(...):any # handler called on each loop
----@param close fun(...):any # handler called on close
+---@param params table # table with elements: title, message, progress, wakeup, close
 ---@return WaitDialog result # WaitDialog
-function form.openWaitDialog(title, message, progress, wakeup, close) end
+function form.openWaitDialog(params) end
 
 ---@class glasses
 glasses = {}

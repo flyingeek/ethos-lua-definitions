@@ -509,6 +509,40 @@ def parse_items(page_html: str, owner: str) -> tuple[list[Item], dict[str, list[
                 )
             ]
 
+        # Ethos openWaitDialog is called with a single options table.
+        if owner == "form" and item_kind == "function" and item_name == "openWaitDialog":
+            params = [
+                Parameter(
+                    name="params",
+                    type_name="table",
+                    description="table with elements: title, message, progress, wakeup, close",
+                )
+            ]
+
+        # In practice these form APIs accept omitted line/panel in examples.
+        if owner == "form" and item_kind == "function" and item_name == "addLine":
+            for parameter in params:
+                if parameter.name == "panel":
+                    parameter.optional = True
+                    if "nil" not in parameter.type_name.split("|"):
+                        parameter.type_name = f"{parameter.type_name}|nil"
+
+        if owner == "form" and item_kind == "function" and item_name in {
+            "addFunctionSwitch",
+            "addPot",
+            "addRadioHardware",
+            "addRotaryEncoder",
+            "addStick",
+            "addSwitch",
+            "addTrim",
+        }:
+            for parameter in params:
+                if parameter.name == "line":
+                    parameter.optional = True
+                    if "nil" not in parameter.type_name.split("|"):
+                        parameter.type_name = f"{parameter.type_name}|nil"
+                    break
+
         items.append(
             Item(
                 owner=owner,
