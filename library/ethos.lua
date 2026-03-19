@@ -1743,7 +1743,7 @@ function form.addButton(line, rect, params) end
 ---@param values table # table of all possible values
 ---@param getValue fun(...):any # the function which will return the current value
 ---@param setValue fun(...):any # the function which will be called on value change
----@return FormFieldLib result # The new field
+---@return ChoiceLib result # The new field
 function form.addChoiceField(line, rect, values, getValue, setValue) end
 
 ---Add a color field to the current form.
@@ -1796,7 +1796,7 @@ function form.addLine(label, panel, separator) end
 ---@param max integer # the max value
 ---@param getValue fun(...):any # the function which will return the current value
 ---@param setValue fun(...):any # the function which will be called on value change
----@return FormFieldLib result # The new field
+---@return NumberEditLib result # The new field
 function form.addNumberField(line, rect, min, max, getValue, setValue) end
 
 ---Add a pot widget.
@@ -1840,7 +1840,7 @@ function form.addSensorField(line, rect, getValue, setValue, filterValue) end
 ---@param max integer # the max value
 ---@param getValue fun(...):any # the function which will return the current value
 ---@param setValue fun(...):any # the function which will be called on value change
----@return FormFieldLib result # The new field
+---@return SliderLib result # The new field
 function form.addSliderField(line, rect, min, max, getValue, setValue) end
 
 ---Add a source field to the current form.
