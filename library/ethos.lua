@@ -96,7 +96,7 @@ function Channel:slowDown(slowUp) end
 ---@return number slowUp # slowUp
 function Channel:slowUp(slowUp) end
 
----@class ChoiceLib
+---@class ChoiceLib: FormFieldLib
 local ChoiceLib = {}
 
 ---Set the field help text.
@@ -598,7 +598,7 @@ function NumberEditLib:suffix(suffix) end
 ---@param handler fun(...):any # the function which will return the display string based on the value
 function NumberEditLib:text(handler) end
 
----@class SliderLib
+---@class SliderLib: FormFieldLib
 local SliderLib = {}
 
 ---Set the field help text.

@@ -681,7 +681,13 @@ def emit_struct(lines: list[str], struct_name: str, fields: list[Field]) -> None
 
 
 def emit_class(lines: list[str], class_name: str, items: list[Item]) -> None:
-    lines.append(f"---@class {class_name}")
+    class_inheritance = {
+        "ChoiceLib": "FormFieldLib",
+        "SliderLib": "FormFieldLib",
+    }
+    parent_class = class_inheritance.get(class_name)
+    class_declaration = f"{class_name}: {parent_class}" if parent_class else class_name
+    lines.append(f"---@class {class_declaration}")
     lines.append(f"local {class_name} = {{}}")
     lines.append("")
     for item in items:
