@@ -1762,7 +1762,7 @@ function form.addColorField(line, rect, getValue, setValue) end
 ---Add an Expansion Panel to the current form.
 ---Since: 1.4.0
 ---@param text string # the displayed text
----@return FormFieldLib result # The new field
+---@return ExpansionPanel result # The new field
 function form.addExpansionPanel(text) end
 
 ---Add a file field to the current form.
