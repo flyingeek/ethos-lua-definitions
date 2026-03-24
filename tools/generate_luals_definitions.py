@@ -797,7 +797,7 @@ def generate(doc_dir: Path, output_path: Path) -> None:
         ),
         Item(
             owner="ProgressDialog",
-            name="closedAllowed",
+            name="closeAllowed",
             kind="function",
             description="Allow or disallow user-initiated close.",
             params=[Parameter(name="allowed", type_name="boolean")],

@@ -619,7 +619,7 @@ function ProgressDialog:value(value) end
 
 ---Allow or disallow user-initiated close.
 ---@param allowed boolean
-function ProgressDialog:closedAllowed(allowed) end
+function ProgressDialog:closeAllowed(allowed) end
 
 ---Close the progress dialog.
 function ProgressDialog:close() end
