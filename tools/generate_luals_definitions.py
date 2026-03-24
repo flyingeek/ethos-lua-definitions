@@ -317,6 +317,7 @@ def infer_return_from_context(owner: str, name: str, text: str) -> str | None:
         ("form", "addTextField"): "FormFieldLib",
         ("form", "addTimeField"): "FormFieldLib",
         ("form", "openDialog"): "Dialog",
+        ("form", "openProgressDialog"): "ProgressDialog",
         ("form", "openWaitDialog"): "WaitDialog",
         ("glasses", "createLayout"): "GlassesLayout",
         ("lcd", "loadBitmap"): "Bitmap",
@@ -522,6 +523,16 @@ def parse_items(page_html: str, owner: str) -> tuple[list[Item], dict[str, list[
                     description="table with elements: title, message, progress, wakeup, close",
                 )
             ]
+
+        # Ethos openProgressDialog takes title, message, wakeup and close callbacks.
+        if owner == "form" and item_kind == "function" and item_name == "openProgressDialog":
+            params = [
+                Parameter(name="title", type_name="string", description="dialog title"),
+                Parameter(name="message", type_name="string", description="dialog message"),
+                Parameter(name="wakeup", type_name="fun(...):any", description="wakeup callback"),
+                Parameter(name="close", type_name="fun(...):any", description="close callback"),
+            ]
+            item_returns = [ReturnValue(name="result", type_name="ProgressDialog", description="ProgressDialog")]
 
         # In practice these form APIs accept omitted line/panel in examples.
         if owner == "form" and item_kind == "function" and item_name == "addLine":
@@ -765,6 +776,43 @@ def generate(doc_dir: Path, output_path: Path) -> None:
             )
         )
 
+    # Some Ethos snapshots omit ProgressDialog; keep this API available for LuaLS.
+    if "ProgressDialog" not in class_items:
+        class_items["ProgressDialog"] = []
+    class_names.add("ProgressDialog")
+    progress_dialog_methods = [
+        Item(
+            owner="ProgressDialog",
+            name="message",
+            kind="function",
+            description="Set the dialog message.",
+            params=[Parameter(name="message", type_name="string")],
+        ),
+        Item(
+            owner="ProgressDialog",
+            name="value",
+            kind="function",
+            description="Set the progress value.",
+            params=[Parameter(name="value", type_name="number")],
+        ),
+        Item(
+            owner="ProgressDialog",
+            name="closedAllowed",
+            kind="function",
+            description="Allow or disallow user-initiated close.",
+            params=[Parameter(name="allowed", type_name="boolean")],
+        ),
+        Item(
+            owner="ProgressDialog",
+            name="close",
+            kind="function",
+            description="Close the progress dialog.",
+        ),
+    ]
+    for method in progress_dialog_methods:
+        if not any(item.name == method.name for item in class_items["ProgressDialog"]):
+            class_items["ProgressDialog"].append(method)
+
     for module_name, file_name in module_pairs:
         items, structs = parse_items(read_text(doc_dir / file_name), module_name)
         struct_defs.update(structs)
@@ -772,6 +820,24 @@ def generate(doc_dir: Path, output_path: Path) -> None:
             base_constants = [item for item in items if item.kind == "constant"]
         else:
             module_items[module_name] = [item for item in items if item.kind == "function"]
+
+    # Keep form.openProgressDialog available when absent from docs.
+    if "form" in module_items and not any(item.name == "openProgressDialog" for item in module_items["form"]):
+        module_items["form"].append(
+            Item(
+                owner="form",
+                name="openProgressDialog",
+                kind="function",
+                description="Open a progress dialog.",
+                params=[
+                    Parameter(name="title", type_name="string", description="dialog title"),
+                    Parameter(name="message", type_name="string", description="dialog message"),
+                    Parameter(name="wakeup", type_name="fun(...):any", description="wakeup callback"),
+                    Parameter(name="close", type_name="fun(...):any", description="close callback"),
+                ],
+                returns=[ReturnValue(name="result", type_name="ProgressDialog", description="ProgressDialog")],
+            )
+        )
 
     all_items = [*base_constants]
     for items in class_items.values():

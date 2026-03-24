@@ -606,6 +606,24 @@ function NumberEditLib:suffix(suffix) end
 ---@param handler fun(...):any # the function which will return the display string based on the value
 function NumberEditLib:text(handler) end
 
+---@class ProgressDialog
+local ProgressDialog = {}
+
+---Set the dialog message.
+---@param message string
+function ProgressDialog:message(message) end
+
+---Set the progress value.
+---@param value number
+function ProgressDialog:value(value) end
+
+---Allow or disallow user-initiated close.
+---@param allowed boolean
+function ProgressDialog:closedAllowed(allowed) end
+
+---Close the progress dialog.
+function ProgressDialog:close() end
+
 ---@class SliderLib: FormFieldLib
 local SliderLib = {}
 
@@ -1982,6 +2000,14 @@ function form.openDialog(params) end
 ---@param params table # table with elements: title, message, progress, wakeup, close
 ---@return WaitDialog result # WaitDialog
 function form.openWaitDialog(params) end
+
+---Open a progress dialog.
+---@param title string # dialog title
+---@param message string # dialog message
+---@param wakeup fun(...):any # wakeup callback
+---@param close fun(...):any # close callback
+---@return ProgressDialog result # ProgressDialog
+function form.openProgressDialog(title, message, wakeup, close) end
 
 ---@class glasses
 glasses = {}
