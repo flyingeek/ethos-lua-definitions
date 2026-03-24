@@ -342,6 +342,10 @@ local LuaButton = {}
 ---Since: 1.5.10
 function LuaButton:focus() end
 
+---Enable or disable the button.
+---@param enabled boolean
+function LuaButton:enable(enabled) end
+
 ---@class LuaCrsfSensor
 local LuaCrsfSensor = {}
 

@@ -754,6 +754,16 @@ def generate(doc_dir: Path, output_path: Path) -> None:
                 since="1.5.10",
             )
         )
+    if "LuaButton" in class_items and not any(item.name == "enable" for item in class_items["LuaButton"]):
+        class_items["LuaButton"].append(
+            Item(
+                owner="LuaButton",
+                name="enable",
+                kind="function",
+                description="Enable or disable the button.",
+                params=[Parameter(name="enabled", type_name="boolean")],
+            )
+        )
 
     for module_name, file_name in module_pairs:
         items, structs = parse_items(read_text(doc_dir / file_name), module_name)
