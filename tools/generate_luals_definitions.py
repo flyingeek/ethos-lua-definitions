@@ -679,6 +679,11 @@ def emit_missing_constants(lines: list[str], base_constants: list[Item]) -> None
     constant_names = {item.name for item in base_constants}
 
     # Keep constants that exist in Ethos but may be missing from current docs.
+    if "FONT_STD" not in constant_names:
+        lines.append("---STD Font")
+        lines.append("---@type integer")
+        lines.append("FONT_STD = 0")
+        lines.append("")
     if "FONT_BOLD" not in constant_names:
         lines.append("---STD Bold Font")
         lines.append("---@type integer")
