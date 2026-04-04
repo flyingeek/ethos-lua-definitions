@@ -839,6 +839,18 @@ def generate(doc_dir: Path, output_path: Path) -> None:
             )
         )
 
+    # lcd.isConfiguring() added in Ethos 26.1, absent from doc snapshot.
+    if "lcd" in module_items and not any(item.name == "isConfiguring" for item in module_items["lcd"]):
+        module_items["lcd"].append(
+            Item(
+                owner="lcd",
+                name="isConfiguring",
+                kind="function",
+                description="Returns true when the script is running in configuration mode (since Ethos 26.1).",
+                returns=[ReturnValue(name="result", type_name="boolean", description="true if in configuration mode")],
+            )
+        )
+
     all_items = [*base_constants]
     for items in class_items.values():
         all_items.extend(items)

@@ -2268,6 +2268,10 @@ function lcd.setWindowTitle(text, color) end
 ---@return integer color # color
 function lcd.themeColor(index, color) end
 
+---Returns true when the script is running in configuration mode (since Ethos 26.1).
+---@return boolean result # true if in configuration mode
+function lcd.isConfiguring() end
+
 ---@class model
 model = {}
 
