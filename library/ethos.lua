@@ -224,6 +224,12 @@ function ExpansionPanel:event(handler) end
 ---@param state boolean
 function ExpansionPanel:open(state) end
 
+---Get / Set the expansion panel rect.
+---Since: 26.1.0
+---@param rect? Rect # the coordinates
+---@return Rect rect # rect
+function ExpansionPanel:rect(rect) end
+
 ---@class FormFieldLib
 local FormFieldLib = {}
 
@@ -273,49 +279,49 @@ function GlassesLayout:clearAndDisplayExtended(params) end
 ---@class LogicSwitch
 local LogicSwitch = {}
 
----Get / set the active condition of the logic switch.
+---Get / Set the active condition of the logic switch.
 ---Since: 1.1.0
 ---@param condition? any
 ---@return Source condition # condition
 function LogicSwitch:activeCondition(condition) end
 
----Get / set the logic switch delay OFF.
+---Get / Set the logic switch delay OFF.
 ---Since: 26.1.0
 ---@param delayOff? integer
 ---@return integer delayOff # delayOff
 function LogicSwitch:delayOff(delayOff) end
 
----Get / set the logic switch delay ON.
+---Get / Set the logic switch delay ON.
 ---Since: 26.1.0
 ---@param delayOn? integer
 ---@return integer delayOn # delayOn
 function LogicSwitch:delayOn(delayOn) end
 
----Get / set the function of the logic switch.
+---Get / Set the function of the logic switch.
 ---Since: 26.1.0
 ---@param function_value? integer
 ---@return integer function_value # function
 LogicSwitch["function"] = function(self, function_value) end
 
----Get / set the logic switch max duration.
+---Get / Set the logic switch max duration.
 ---Since: 26.1.0
 ---@param maxDuration? integer
 ---@return integer maxDuration # maxDuration
 function LogicSwitch:maxDuration(maxDuration) end
 
----Get / set the logic switch min duration.
+---Get / Set the logic switch min duration.
 ---Since: 26.1.0
 ---@param minDuration? integer
 ---@return integer minDuration # minDuration
 function LogicSwitch:minDuration(minDuration) end
 
----Get / set the logic switch name.
+---Get / Set the logic switch name.
 ---Since: 26.1.0
 ---@param name? string
 ---@return string name # name
 function LogicSwitch:name(name) end
 
----Get / set the logic switch negative attribute.
+---Get / Set the logic switch negative attribute.
 ---Since: 26.1.0
 ---@param negative? boolean
 ---@return boolean negative # negative
@@ -326,7 +332,7 @@ function LogicSwitch:negative(negative) end
 ---@return boolean state # state
 function LogicSwitch:state() end
 
----Get / set the test values of the logic switch.
+---Get / Set the test values of the logic switch.
 ---Since: 26.1.0
 ---@param values? table
 ---@return table values # values
@@ -355,43 +361,43 @@ local LuaMultimoduleSensor = {}
 ---@class LuaSPortFrame
 local LuaSPortFrame = {}
 
----Get / set the appId of the frame.
+---Get / Set the appId of the frame.
 ---Since: 1.1.0
 ---@param appId? integer
 ---@return integer appId # appId
 function LuaSPortFrame:appId(appId) end
 
----Get / set the band.
+---Get / Set the band.
 ---Since: 1.1.0
 ---@param band? integer
 ---@return integer band # band
 function LuaSPortFrame:band(band) end
 
----Get / set the module.
+---Get / Set the module.
 ---Since: 1.1.0
 ---@param module? integer
 ---@return integer module # module
 function LuaSPortFrame:module(module) end
 
----Get / set the physId of the frame.
+---Get / Set the physId of the frame.
 ---Since: 1.1.0
 ---@param physId? integer
 ---@return integer physId # physId
 function LuaSPortFrame:physId(physId) end
 
----Get / set the primId of the frame.
+---Get / Set the primId of the frame.
 ---Since: 1.1.0
 ---@param primId? integer
 ---@return integer primId # primId
 function LuaSPortFrame:primId(primId) end
 
----Get / set the rx index.
+---Get / Set the rx index.
 ---Since: 1.1.0
 ---@param rx? integer
 ---@return integer rx # rx
 function LuaSPortFrame:rx(rx) end
 
----Get / set the value of the frame.
+---Get / Set the value of the frame.
 ---Since: 1.1.0
 ---@param value? integer
 ---@return integer value # value
@@ -400,13 +406,13 @@ function LuaSPortFrame:value(value) end
 ---@class LuaSPortSensor
 local LuaSPortSensor = {}
 
----Get / set the appId of sensor.
+---Get / Set the appId of sensor.
 ---Since: 1.1.0
 ---@param appId? integer
 ---@return integer appId # appId
 function LuaSPortSensor:appId(appId) end
 
----Get / set the band.
+---Get / Set the band.
 ---Since: 1.1.0
 ---@param band? integer
 ---@return integer band # band
@@ -428,13 +434,13 @@ function LuaSPortSensor:getParameter() end
 ---@return boolean result # result
 function LuaSPortSensor:idle(state) end
 
----Get / set the module.
+---Get / Set the module.
 ---Since: 1.1.0
 ---@param module? integer
 ---@return integer module # module
 function LuaSPortSensor:module(module) end
 
----Get / set the physId of sensor.
+---Get / Set the physId of sensor.
 ---Since: 1.1.0
 ---@param physId? integer
 ---@return integer physId # physId
@@ -457,7 +463,7 @@ function LuaSPortSensor:pushFrame(frame) end
 ---@return boolean result # result
 function LuaSPortSensor:requestParameter(parameter) end
 
----Get / set the rx index.
+---Get / Set the rx index.
 ---Since: 1.1.0
 ---@param rx? integer
 ---@return integer rx # rx
@@ -547,7 +553,7 @@ function MultimoduleSensor:pushFrame(data) end
 ---@class NumberEditLib
 local NumberEditLib = {}
 
----Get / set the field decimals.
+---Get / Set the field decimals.
 ---Since: 1.1.0
 ---@param value? integer
 ---@return integer value # value
@@ -568,13 +574,13 @@ function NumberEditLib:enableInstantChange(enabled) end
 ---@param text string
 function NumberEditLib:help(text) end
 
----Get / set the field maximum value.
+---Get / Set the field maximum value.
 ---Since: 1.6.2
 ---@param value? integer
 ---@return integer value # value
 function NumberEditLib:maximum(value) end
 
----Get / set the field minimum value.
+---Get / Set the field minimum value.
 ---Since: 1.6.2
 ---@param value? integer
 ---@return integer value # value
@@ -590,7 +596,7 @@ function NumberEditLib:onFocus(handler) end
 ---@param prefix string
 function NumberEditLib:prefix(prefix) end
 
----Get / set the field step.
+---Get / Set the field step.
 ---Since: 1.1.0
 ---@param value? integer
 ---@return integer value # value
@@ -647,7 +653,7 @@ function SliderLib:minimum(minimum) end
 ---@param handler any # function(state)
 function SliderLib:onFocus(handler) end
 
----Get / set the field step.
+---Get / Set the field step.
 ---Since: 1.6.2
 ---@param value number
 ---@return number value # value
@@ -662,7 +668,7 @@ local Source = {}
 function Source:age() end
 
 ---Get or set the appId of the source if is a FrSky sensor.
----Since: 1.5.5 source = system.getSource({ name = "GPS" }) source: appId (0x0110) print(source: name ().. " module:".. source: module ().. " band:".. source: band ().. " appId:".. source: appId ().. " physId:".. source: physId ()) Source::appId appId() Get or set the appId of the source if is a FrSky sensor. Definition: api_source.cpp:786 Source::physId physId() Get or set the physId of the source if it is a FrSky sensor. Definition: api_source.cpp:814 Source::band band() Get or set the band of the source if it is a FrSky Sensor. Definition: api_source.cpp:755 Source::module module() Get or set the module of the source if its category is TELEMETRY and it is not a Calculated Sensor. Definition: api_source.cpp:724 Source::name name() Return the source name (and modify it on Vars and Sensors) Definition: api_source.cpp:71
+---Since: 1.5.5 source = system.getSource({ name = "GPS" }) source: appId (0x0110) print(source: name ().. " module:".. source: module ().. " band:".. source: band ().. " appId:".. source: appId ().. " physId:".. source: physId ()) Source::appId appId() Get or set the appId of the source if is a FrSky sensor. Definition: api_source.cpp:806 Source::physId physId() Get or set the physId of the source if it is a FrSky sensor. Definition: api_source.cpp:834 Source::band band() Get or set the band of the source if it is a FrSky Sensor. Definition: api_source.cpp:775 Source::module module() Get or set the module of the source if its category is TELEMETRY and it is not a Calculated Sensor. Definition: api_source.cpp:744 Source::name name() Return the source name (and modify it on Vars and Sensors) Definition: api_source.cpp:71
 ---@param appId? integer
 ---@return integer appId # appId
 function Source:appId(appId) end
@@ -679,7 +685,7 @@ function Source:band(band) end
 function Source:category() end
 
 ---Get or set the crsfId of the source if it is a CRSF sensor.
----Since: 1.6.2 source = system.getSource({ name = "Tx SNR" }) source: crsfId (0x0110) print(source: name ().. " module:".. source: module ().. " crsfId:".. source: crsfId ()).. " subId:".. source: subId ()) Source::subId subId() Get or set the subId of the source if it is a CRSF or a FrSky sensor. Definition: api_source.cpp:869 Source::crsfId crsfId() Get or set the crsfId of the source if it is a CRSF sensor. Definition: api_source.cpp:842
+---Since: 1.6.2 source = system.getSource({ name = "Tx SNR" }) source: crsfId (0x0110) print(source: name ().. " module:".. source: module ().. " crsfId:".. source: crsfId ()).. " subId:".. source: subId ()) Source::subId subId() Get or set the subId of the source if it is a CRSF or a FrSky sensor. Definition: api_source.cpp:889 Source::crsfId crsfId() Get or set the crsfId of the source if it is a CRSF sensor. Definition: api_source.cpp:862
 ---@param crsfId? integer
 ---@return integer crsfId # crsfId
 function Source:crsfId(crsfId) end
@@ -691,7 +697,7 @@ function Source:crsfId(crsfId) end
 function Source:decimals(decimals) end
 
 ---Drop a telemetry sensor.
----Since: 1.5.10 source = system.getSource({ name = "GPS" }) source: drop () Source::drop drop() Drop a telemetry sensor. Definition: api_source.cpp:909
+---Since: 1.5.10 source = system.getSource({ name = "GPS" }) source: drop () Source::drop drop() Drop a telemetry sensor. Definition: api_source.cpp:929
 function Source:drop() end
 
 ---Return the source maximum (and modify it on Vars and Sensors)
@@ -790,37 +796,37 @@ function Source:value(options) end
 ---@class Timer
 local Timer = {}
 
----Get / set the alarm value of the timer.
+---Get / Set the alarm value of the timer.
 ---Since: 1.1.0
 ---@param alarm? integer
 ---@return integer alarm # alarm
 function Timer:alarm(alarm) end
 
----Get / set the audio actions of the timer.
+---Get / Set the audio actions of the timer.
 ---Since: 1.5.0
 ---@param actions? table
 ---@return table audio_actions # audio actions
 function Timer:audioActions(actions) end
 
----Get / set the counting source of the timer.
+---Get / Set the counting source of the timer.
 ---Since: 26.1.0
 ---@param source? any
 ---@return Source source # source
 function Timer:countingSource(source) end
 
----Get / set the timer direction (1 / -1)
+---Get / Set the timer direction (1 / -1)
 ---Since: 1.1.0
 ---@param direction? integer
 ---@return integer direction # direction
 function Timer:direction(direction) end
 
----Get / set the timer name.
+---Get / Set the timer name.
 ---Since: 1.1.0
 ---@param name? string
 ---@return string name # name
 function Timer:name(name) end
 
----Get / set the timer persistent attribute.
+---Get / Set the timer persistent attribute.
 ---Since: 26.1.0
 ---@param persistent? boolean
 ---@return boolean persistent # persistent
@@ -830,7 +836,7 @@ function Timer:persistent(persistent) end
 ---Since: 1.4.10
 function Timer:reset() end
 
----Get / set the reset condition of the timer.
+---Get / Set the reset condition of the timer.
 ---Since: 1.1.0
 ---@param condition? any
 ---@return Source reset # reset
@@ -841,19 +847,19 @@ function Timer:resetCondition(condition) end
 ---@return boolean running # running
 function Timer:running() end
 
----Get / set the start value of the timer.
+---Get / Set the start value of the timer.
 ---Since: 1.1.0
 ---@param start? integer
 ---@return integer start # start
 function Timer:start(start) end
 
----Get / set the start condition of the timer.
+---Get / Set the start condition of the timer.
 ---Since: 1.1.0
 ---@param condition? any
 ---@return Source condition # condition
 function Timer:startCondition(condition) end
 
----Get / set the stop condition of the timer.
+---Get / Set the stop condition of the timer.
 ---Since: 26.1.0
 ---@return Source none_or_condition # None or condition
 function Timer:stopCondition() end
@@ -863,12 +869,12 @@ function Timer:stopCondition() end
 ---@return string value # value
 function Timer:stringValue() end
 
----Get / set the timer value.
+---Get / Set the timer value.
 ---Since: 1.1.0
 ---@return integer value # value
 function Timer:value() end
 
----Get / set the voice used by the timer.
+---Get / Set the voice used by the timer.
 ---Since: 26.1.0
 ---@param voice? integer
 ---@return integer voice # voice
@@ -1429,21 +1435,37 @@ TEXT_LEFT = 0
 ---@type integer
 TEXT_RIGHT = 0
 
----THEME_DEFAULT_BGCOLOR
+---THEME_DEFAULT_BGCOLOR (deprecated)
 ---@type integer
 THEME_DEFAULT_BGCOLOR = 0
 
----THEME_DEFAULT_COLOR
+---THEME_DEFAULT_COLOR (deprecated)
 ---@type integer
 THEME_DEFAULT_COLOR = 0
 
----THEME_FOCUS_BGCOLOR
+---THEME_FOCUS_BGCOLOR (deprecated)
 ---@type integer
 THEME_FOCUS_BGCOLOR = 0
 
 ---THEME_FOCUS_COLOR
 ---@type integer
 THEME_FOCUS_COLOR = 0
+
+---THEME_PRIMARY_BGCOLOR
+---@type integer
+THEME_PRIMARY_BGCOLOR = 0
+
+---THEME_PRIMARY_COLOR
+---@type integer
+THEME_PRIMARY_COLOR = 0
+
+---THEME_SECONDARY_BGCOLOR
+---@type integer
+THEME_SECONDARY_BGCOLOR = 0
+
+---THEME_SECONDARY_COLOR
+---@type integer
+THEME_SECONDARY_COLOR = 0
 
 ---THEME_WARNING_COLOR
 ---@type integer
@@ -2042,7 +2064,7 @@ function glasses.text(x, y, font, text) end
 ---@class lcd
 lcd = {}
 
----Get / set the current color.
+---Get / Set the current color.
 ---Since: 1.1.0
 ---@param color? integer # color value
 ---@return integer color # color
@@ -2162,9 +2184,9 @@ function lcd.drawText(x, y, text, flags) end
 ---@param y3 number # Y3 coordinate
 function lcd.drawTriangle(x1, y1, x2, y2, x3, y3) end
 
----Get / set the current font.
+---Get / Set the current font.
 ---Since: 1.1.0
----@param font integer # one of the available fonts (FONT_M, FONT_BOLD, FONT_ITALIC, FONT_XS, FONT_XS_BOLD, FONT_S, FONT_L, FONT_L_BOLD, FONT_XL, FONT_XXL)
+---@param font integer # one of the available fonts (FONT_M, FONT_M_BOLD, FONT_M_ITALIC, FONT_XS, FONT_XS_BOLD, FONT_S, FONT_L, FONT_L_BOLD, FONT_XL, FONT_XXL)
 ---@return integer font # font
 function lcd.font(font) end
 
@@ -2201,6 +2223,16 @@ function lcd.hasFocus() end
 ---@param h? number # rectangle height
 function lcd.invalidate(x, y, w, h) end
 
+---Check if the window is configuring or not.
+---Since: 26.1.0
+---@return boolean configuring # configuring
+function lcd.isConfiguring() end
+
+---Check if the window is swiping or not.
+---Since: 26.1.0
+---@return boolean swiping # swiping
+function lcd.isSwiping() end
+
 ---Check if the window is visible on screen or not.
 ---Since: 1.5.0
 ---@return boolean visible # visible
@@ -2226,7 +2258,7 @@ function lcd.loadFont(path) end
 ---@return Mask maskHandle # maskHandle
 function lcd.loadMask(path, lazy) end
 
----Get / set the current pen style.
+---Get / Set the current pen style.
 ---Since: 1.1.0
 ---@param pen integer # a binary mask or one of the values SOLID, DOTTED or DASHED
 ---@return integer pen # pen
@@ -2261,21 +2293,17 @@ function lcd.setClipping(x, y, w, h) end
 ---@param color? number # title color
 function lcd.setWindowTitle(text, color) end
 
----Get / set the theme color.
+---Get / Set the theme color.
 ---Since: 1.1.0
 ---@param index integer # theme color index
 ---@param color? integer # color value
 ---@return integer color # color
 function lcd.themeColor(index, color) end
 
----Returns true when the script is running in configuration mode (since Ethos 26.1).
----@return boolean result # true if in configuration mode
-function lcd.isConfiguring() end
-
 ---@class model
 model = {}
 
----Get / set the model bitmap.
+---Get / Set the model bitmap.
 ---Since: 1.1.0
 ---@param bitmap? string
 ---@return string bitmap # bitmap
@@ -2348,7 +2376,7 @@ function model.getTimer(Name, Index) end
 ---@return table ids # ids
 function model.id() end
 
----Get / set the model name.
+---Get / Set the model name.
 ---Since: 1.1.0
 ---@param name? string
 ---@return string name # name
