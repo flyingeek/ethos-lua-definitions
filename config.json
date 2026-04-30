@@ -1,20 +1,9 @@
 {
-    // Name of the addon
     "name": "Ethos Lua (FrSky)",
-
-    // Lua string patterns to look for in a workspace.
-    // If detected, this addon will be recommended to enable
     "words": [
         "system.registerWidget",
         "system.registerLayout",
         "system.registerSystemTool",
         "system.registerTask"
     ]
-
-    // Lua string patterns to look for in filenames.
-    // If detected, this addon will be recommended to enable
-    //"files": [],
-
-    // List of settings to apply when this addon is enabled
-    //"settings": {}
 }
