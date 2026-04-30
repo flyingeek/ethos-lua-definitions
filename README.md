@@ -1,5 +1,18 @@
 # Ethos LuaLS Definitions
 
+## Easy setup
+
+The simplest way to use the Ethos Lua definitions in VS Code is by using the built-in LuaLS Addon manager:
+
+1. Install the [Lua extension](https://marketplace.visualstudio.com/items?itemName=sumneko.lua) by sumneko in VS Code.
+2. Open the Command Palette (`Ctrl+Shift+P` / `Cmd+Shift+P`).
+3. Run the command **Lua: Open Addon Manager**.
+4. Find and enable the **Ethos Lua (FrSky)** addon.
+
+For more details on addons, see the [LuaLS addons documentation](https://luals.github.io/wiki/addons/).
+
+## Manual setup
+
 This repository generates Lua language server annotations from the Doxygen HTML in `lua-doc/`.
 
 The `lua-doc/` directory is intentionally not included in this repository. Before generating the definitions, download the documentation from the FrSky nightly release:

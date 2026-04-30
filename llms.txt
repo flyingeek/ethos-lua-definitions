@@ -10,6 +10,20 @@ APIs inside VS Code (or any editor with LuaLS support).
 
 ## How to add to an Ethos Lua project
 
+### Easy setup (VS Code)
+
+The simplest way to use these definitions in VS Code is via the built-in LuaLS Addon manager:
+
+1. Install the `sumneko.lua` extension in VS Code.
+2. Run the command **Lua: Open Addon Manager**.
+3. Find and enable the **Ethos Lua (FrSky)** addon.
+
+No manual `.luarc.json` configuration or library copying is required when using the addon.
+
+### Manual setup
+
+To manually add these definitions to a project (e.g. outside of VS Code or for a custom configuration):
+
 1. Copy or symlink the `library/` directory into your project, or reference it by absolute path.
 2. Create (or update) `.luarc.json` in your project root:
 
