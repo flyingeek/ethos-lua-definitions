@@ -1,60 +1,87 @@
-name: Publish Release
+name: Update LuaLS Addon
 
 on:
-  push:
-    branches:
-      - "publish/v*"
+  workflow_dispatch:
+    inputs:
+      version:
+        description: 'Version tag (e.g., v1.5.0-2026.04.30)'
+        required: true
+        type: string
 
 permissions:
   contents: write
 
 jobs:
-  release:
+  update-addon:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout
+      - name: Checkout main source
         uses: actions/checkout@v4
+        with:
+          ref: main
 
-      - name: Extract version from branch name
-        id: version
+      - name: Save ethos.lua temporally
         run: |
-          BRANCH="${GITHUB_REF#refs/heads/publish/}"
-          echo "tag=${BRANCH}" >> "$GITHUB_OUTPUT"
-          if [[ "$BRANCH" == *"-"* ]]; then
-            echo "prerelease=true" >> "$GITHUB_OUTPUT"
+          mkdir -p /tmp/ethos-addon
+          cp library/ethos.lua /tmp/ethos-addon/
+
+      - name: Checkout luals-addon branch
+        uses: actions/checkout@v4
+        with:
+          ref: luals-addon
+          clean: true
+
+      - name: Update ethos.lua in luals-addon branch
+        run: |
+          mkdir -p library
+          cp /tmp/ethos-addon/ethos.lua library/ethos.lua
+          
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add library/ethos.lua
+          
+          if git diff-index --quiet HEAD; then
+            echo "No changes to commit."
           else
-            echo "prerelease=false" >> "$GITHUB_OUTPUT"
+            git commit -m "Update ethos.lua to ${{ github.event.inputs.version }}"
+            git push origin luals-addon
           fi
 
-      - name: Derive release name
-        id: name
-        run: |
-          TAG="${{ steps.version.outputs.tag }}"
-          # Strip leading 'v' and split on '-' to get semver and date parts
-          BODY="${TAG#v}"
-          SEMVER="${BODY%%-*}"
-          DATE_PART="${BODY#*-}"
-          if [[ "$BODY" == "$SEMVER" ]]; then
-            # No date suffix
-            echo "release_name=Ethos ${SEMVER} definitions" >> "$GITHUB_OUTPUT"
-          else
-            # Convert YYYY.MM.DD to YYYY-MM-DD
-            FORMATTED_DATE="${DATE_PART//./-}"
-            echo "release_name=Ethos ${SEMVER} definitions (${FORMATTED_DATE})" >> "$GITHUB_OUTPUT"
-          fi
+      - name: Checkout LLS-Addons fork
+        uses: actions/checkout@v4
+        with:
+          repository: flyingeek/LLS-Addons
+          token: ${{ secrets.ADDON_PAT }}
+          path: LLS-Addons
+          submodules: true
 
-      - name: Create tag
+      - name: Update submodule and Create PR
+        working-directory: LLS-Addons
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
-          git tag "${{ steps.version.outputs.tag }}"
-          git push origin "${{ steps.version.outputs.tag }}"
-
-      - name: Create GitHub Release
-        uses: softprops/action-gh-release@v2
-        with:
-          tag_name: ${{ steps.version.outputs.tag }}
-          name: ${{ steps.name.outputs.release_name }}
-          prerelease: ${{ steps.version.outputs.prerelease }}
-          files: library/ethos.lua
-          generate_release_notes: true
+          
+          # Replace invalid branch chars safely
+          CLEAN_VERSION=$(echo "${{ github.event.inputs.version }}" | tr -cd '[:alnum:].-')
+          BRANCH_NAME="update-ethos-addon-${CLEAN_VERSION}"
+          
+          git checkout -b $BRANCH_NAME
+          
+          # Update the submodule to point to the newest commit on luals-addon branch
+          git submodule update --remote addons/ethos/module
+          
+          git add addons/ethos/module
+          if git diff-index --quiet HEAD; then
+            echo "No changes to submodule."
+          else
+            git commit -m "Update ethos addon to ${{ github.event.inputs.version }}"
+            git push origin $BRANCH_NAME
+            
+            gh pr create --repo LuaLS/LLS-Addons \
+                         --title "Update ethos addon to ${{ github.event.inputs.version }}" \
+                         --body "Automated update of ETHOS Lua definitions to version ${{ github.event.inputs.version }}." \
+                         --head flyingeek:$BRANCH_NAME \
+                         --base main
+          fi
+        env:
+          GITHUB_TOKEN: ${{ secrets.ADDON_PAT }}
