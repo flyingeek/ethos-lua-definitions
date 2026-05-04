@@ -50,13 +50,13 @@ Point LuaLS at the `library/` directory. For example, using recommanded options,
   "completion.autoRequire": false,
   "runtime.version": "Lua 5.4",
   "runtime.builtin": {
-    "bit": "disabled",
-    "bit32": "disabled",
-    "coroutine": "disabled",
-    "debug": "disabled",
-    "ffi": "disabled",
-    "jit": "disabled",
-    "os": "disabled"
+    "bit": "disable",
+    "bit32": "disable",
+    "coroutine": "disable",
+    "debug": "disable",
+    "ffi": "disable",
+    "jit": "disable",
+    "os": "disable"
   }
 }
 ```
