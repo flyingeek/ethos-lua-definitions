@@ -87,10 +87,28 @@ Ethos adds `os.clock()`, `os.date()`, `os.exit()`, `os.time()` with Ethos-specif
 
 ## Notes for AI assistants
 
+**Only use APIs, functions, and constants that exist in `library/ethos.lua`. Do not invent or assume any others.**
+
+### This is Ethos Lua — NOT OpenTX or EdgeTX
+
+Ethos has a completely different API from OpenTX/EdgeTX. Do not apply OpenTX/EdgeTX patterns,
+function names, or idioms when writing Ethos Lua code. Highest-confusion differences:
+
+- There is no `model.getChannelValue()` — use `model.getChannel(index)` which returns a `Channel`
+  object, then call methods on it (e.g. `channel:value()`).
+- There is no `getValue()` / `setValue()` global — Ethos uses typed source/sensor objects.
+- There is no `SCRIPT_RUN` / `SCRIPT_ACTIVE` / `SCRIPT_BACKGROUND` lifecycle — Ethos scripts
+  expose `init()`, `wakeup()`, `paint()`, `event()`, `close()` callbacks via `local app = {}`.
+- Mixer scripts, telemetry scripts, and widget scripts from OpenTX/EdgeTX do not exist in Ethos.
+
+### Ethos-specific rules
+
 - All constants are globals — use `FONT_XS` not `base.FONT_XS`.
 - `FONT_STD` is included as a standalone global constant.
 - `form.add*` functions return typed widget objects: e.g. `form.addButton()` → `LuaButton`,
   `form.addNumberEdit()` → `NumberEditLib`, `form.addChoice()` → `ChoiceLib`.
 - `model.createCurve()` → `Curve`, `model.createTimer()` → `Timer`, etc.
 - `lcd` drawing functions take optional `Rect` (table `{x, y, w, h}`) or coordinate pairs.
+- `model.getTimer()` / `model.createTimer()` return a `Timer` object; call methods on it
+  (e.g. `timer:active()`, `timer:value()`).
 - A few return types fall back to `any` where the upstream HTML docs were too vague to infer.
