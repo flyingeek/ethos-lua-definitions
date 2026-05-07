@@ -373,12 +373,6 @@ function LuaSPortFrame:appId(appId) end
 ---@return integer band # band
 function LuaSPortFrame:band(band) end
 
----Get / Set the module.
----Since: 1.1.0
----@param module? integer
----@return integer module # module
-function LuaSPortFrame:module(module) end
-
 ---Get / Set the physId of the frame.
 ---Since: 1.1.0
 ---@param physId? integer
@@ -433,12 +427,6 @@ function LuaSPortSensor:getParameter() end
 ---@param state? boolean
 ---@return boolean result # result
 function LuaSPortSensor:idle(state) end
-
----Get / Set the module.
----Since: 1.1.0
----@param module? integer
----@return integer module # module
-function LuaSPortSensor:module(module) end
 
 ---Get / Set the physId of sensor.
 ---Since: 1.1.0
@@ -668,13 +656,13 @@ local Source = {}
 function Source:age() end
 
 ---Get or set the appId of the source if is a FrSky sensor.
----Since: 1.5.5 source = system.getSource({ name = "GPS" }) source: appId (0x0110) print(source: name ().. " module:".. source: module ().. " band:".. source: band ().. " appId:".. source: appId ().. " physId:".. source: physId ()) Source::appId appId() Get or set the appId of the source if is a FrSky sensor. Definition: api_source.cpp:806 Source::physId physId() Get or set the physId of the source if it is a FrSky sensor. Definition: api_source.cpp:834 Source::band band() Get or set the band of the source if it is a FrSky Sensor. Definition: api_source.cpp:775 Source::module module() Get or set the module of the source if its category is TELEMETRY and it is not a Calculated Sensor. Definition: api_source.cpp:744 Source::name name() Return the source name (and modify it on Vars and Sensors) Definition: api_source.cpp:71
+---Since: 1.5.5 source = system.getSource({ name = "GPS" }) source: appId (0x0110) print(source: name ().. " module:".. source:module().. " band:".. source: band ().. " appId:".. source: appId ().. " physId:".. source: physId ()) Source::appId appId() Get or set the appId of the source if is a FrSky sensor. Definition api_source.cpp:806 Source::physId physId() Get or set the physId of the source if it is a FrSky sensor. Definition api_source.cpp:834 Source::band band() Get or set the band of the source if it is a FrSky Sensor. Definition api_source.cpp:775 Source::name name() Return the source name (and modify it on Vars and Sensors) Definition api_source.cpp:71
 ---@param appId? integer
 ---@return integer appId # appId
 function Source:appId(appId) end
 
 ---Get or set the band of the source if it is a FrSky Sensor.
----Since: 1.5.5 source = system.getSource({ name = "GPS" }) source: band (0) print(source: name ().. " module:".. source: module ().. " band:".. source: band ().. " appId:".. source: appId ().. " physId:".. source: physId ())
+---Since: 1.5.5 source = system.getSource({ name = "GPS" }) source: band (0) print(source: name ().. " module:".. source:module().. " band:".. source: band ().. " appId:".. source: appId ().. " physId:".. source: physId ())
 ---@param band? integer
 ---@return integer band # band
 function Source:band(band) end
@@ -685,7 +673,7 @@ function Source:band(band) end
 function Source:category() end
 
 ---Get or set the crsfId of the source if it is a CRSF sensor.
----Since: 1.6.2 source = system.getSource({ name = "Tx SNR" }) source: crsfId (0x0110) print(source: name ().. " module:".. source: module ().. " crsfId:".. source: crsfId ()).. " subId:".. source: subId ()) Source::subId subId() Get or set the subId of the source if it is a CRSF or a FrSky sensor. Definition: api_source.cpp:889 Source::crsfId crsfId() Get or set the crsfId of the source if it is a CRSF sensor. Definition: api_source.cpp:862
+---Since: 1.6.2 source = system.getSource({ name = "Tx SNR" }) source: crsfId (0x0110) print(source: name ().. " module:".. source:module().. " crsfId:".. source: crsfId ()).. " subId:".. source: subId ()) Source::subId subId() Get or set the subId of the source if it is a CRSF or a FrSky sensor. Definition api_source.cpp:889 Source::crsfId crsfId() Get or set the crsfId of the source if it is a CRSF sensor. Definition api_source.cpp:862
 ---@param crsfId? integer
 ---@return integer crsfId # crsfId
 function Source:crsfId(crsfId) end
@@ -697,7 +685,7 @@ function Source:crsfId(crsfId) end
 function Source:decimals(decimals) end
 
 ---Drop a telemetry sensor.
----Since: 1.5.10 source = system.getSource({ name = "GPS" }) source: drop () Source::drop drop() Drop a telemetry sensor. Definition: api_source.cpp:929
+---Since: 1.5.10 source = system.getSource({ name = "GPS" }) source: drop () Source::drop drop() Drop a telemetry sensor. Definition api_source.cpp:929
 function Source:drop() end
 
 ---Return the source maximum (and modify it on Vars and Sensors)
@@ -715,12 +703,6 @@ function Source:member() end
 ---@return number value # value
 function Source:minimum() end
 
----Get or set the module of the source if its category is TELEMETRY and it is not a Calculated Sensor.
----Since: 1.5.5 source = system.getSource({ name = "GPS" }) source: module (0) print(source: name ().. " module:".. source: module ().. " band:".. source: band ().. " appId:".. source: appId ().. " physId:".. source: physId ())
----@param module? integer
----@return integer module # module
-function Source:module(module) end
-
 ---Return the source name (and modify it on Vars and Sensors)
 ---Since: 1.5.5
 ---@param name? string
@@ -733,7 +715,7 @@ function Source:name(name) end
 function Source:options() end
 
 ---Get or set the physId of the source if it is a FrSky sensor.
----Since: 1.5.5 source = system.getSource({ name = "GPS" }) source: physId (0x01) print(source: name ().. " module:".. source: module ().. " band:".. source: band ().. " appId:".. source: appId ().. " physId:".. source: physId ())
+---Since: 1.5.5 source = system.getSource({ name = "GPS" }) source: physId (0x01) print(source: name ().. " module:".. source:module().. " band:".. source: band ().. " appId:".. source: appId ().. " physId:".. source: physId ())
 ---@param physId? integer
 ---@return integer physId # physId
 function Source:physId(physId) end
@@ -776,7 +758,7 @@ function Source:stringUnit() end
 function Source:stringValue(options) end
 
 ---Get or set the subId of the source if it is a CRSF or a FrSky sensor.
----Since: 1.6.2 source = system.getSource({ name = "Tx SNR" }) print(source: name ().. " module:".. source: module ().. " crsfId:".. source: crsfId ()).. " subId:".. source: subId ())
+---Since: 1.6.2 source = system.getSource({ name = "Tx SNR" }) print(source: name ().. " module:".. source:module().. " crsfId:".. source: crsfId ()).. " subId:".. source: subId ())
 ---@param crsfId? integer
 ---@return integer crsfId # crsfId
 function Source:subId(crsfId) end
@@ -2677,7 +2659,7 @@ function system.registerMultimoduleProtocol(label, id, params) end
 
 ---Register a Lua Source.
 ---Since: 1.1.0
----@param params? any # table with elements: key (string, 7 chars max): source key name (string or function): source name init (function, optional): handler called on source init wakeup (function, optional): handler called at each loop read (function, optional): optional read handler write (function, optional): optional write handler configure (function, optional): handler called on source configuration
+---@param params? any # table with elements: key (string, 7 chars max): source key name (string or function): source name init (function, optional): handler called on source init done (function, optional): handler called on source stop wakeup (function, optional): handler called at each loop read (function, optional): optional read handler write (function, optional): optional write handler configure (function, optional): handler called on source configuration
 function system.registerSource(params) end
 
 ---Register a Lua System Tool.
@@ -2688,7 +2670,7 @@ function system.registerSystemTool(params) end
 
 ---Register a Lua Task.
 ---Since: 1.5.0
----@param params? any # table with elements: key (string, 7 chars max): task key name (string or function): task name init (function, optional): handler called on task init event (function, optional): handler called at each event wakeup (function, optional): handler called at each loop read (function, optional): optional read handler write (function, optional): optional write handler configure (function, optional): handler called on task configuration
+---@param params? any # table with elements: key (string, 7 chars max): task key name (string or function): task name init (function, optional): handler called on task init done (function, optional): handler called on task stop event (function, optional): handler called at each event wakeup (function, optional): handler called at each loop read (function, optional): optional read handler write (function, optional): optional write handler configure (function, optional): handler called on task configuration
 function system.registerTask(params) end
 
 ---Register a Lua Widget.
@@ -2712,6 +2694,9 @@ function system.startLatencyTest(channel, value, maxDuration) end
 ---@return number min
 ---@return number max
 function system.voltageRange() end
+
+---@class os
+os = {}
 
 ---Check if a file or directory exists and retrieve its info.
 ---@param path string
