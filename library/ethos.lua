@@ -2695,9 +2695,6 @@ function system.startLatencyTest(channel, value, maxDuration) end
 ---@return number max
 function system.voltageRange() end
 
----@class os
-os = {}
-
 ---Check if a file or directory exists and retrieve its info.
 ---@param path string
 ---@return table|nil result

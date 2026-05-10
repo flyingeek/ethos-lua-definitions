@@ -890,9 +890,6 @@ def generate(doc_dir: Path, output_path: Path) -> None:
 
     lines.extend(
         [
-            "---@class os",
-            "os = {}",
-            "",
             "---Check if a file or directory exists and retrieve its info.",
             "---@param path string",
             "---@return table|nil result",
