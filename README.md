@@ -55,8 +55,7 @@ Point LuaLS at the `library/` directory. For example, using recommanded options,
     "coroutine": "disable",
     "debug": "disable",
     "ffi": "disable",
-    "jit": "disable",
-    "os": "disable"
+    "jit": "disable"
   }
 }
 ```
