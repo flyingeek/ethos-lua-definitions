@@ -5,5 +5,16 @@
         "system.registerLayout",
         "system.registerSystemTool",
         "system.registerTask"
-    ]
+    ],
+    "settings": {
+        "Lua.runtime.version": "Lua 5.4",
+        "Lua.runtime.builtin": {
+            "bit": "disable",
+            "bit32": "disable",
+            "coroutine": "disable",
+            "debug": "disable",
+            "ffi": "disable",
+            "jit": "disable"
+        }
+    }
 }
