@@ -1417,6 +1417,18 @@ TEXT_LEFT = 0
 ---@type integer
 TEXT_RIGHT = 0
 
+---THEME_ACTIVE_COLOR
+---@type integer
+THEME_ACTIVE_COLOR = 0
+
+---THEME_BUTTON_BORDER_ACTIVE_COLOR
+---@type integer
+THEME_BUTTON_BORDER_ACTIVE_COLOR = 0
+
+---THEME_BUTTON_BORDER_COLOR
+---@type integer
+THEME_BUTTON_BORDER_COLOR = 0
+
 ---THEME_DEFAULT_BGCOLOR (deprecated)
 ---@type integer
 THEME_DEFAULT_BGCOLOR = 0
@@ -1425,13 +1437,37 @@ THEME_DEFAULT_BGCOLOR = 0
 ---@type integer
 THEME_DEFAULT_COLOR = 0
 
+---THEME_DISABLE_COLOR
+---@type integer
+THEME_DISABLE_COLOR = 0
+
 ---THEME_FOCUS_BGCOLOR (deprecated)
 ---@type integer
 THEME_FOCUS_BGCOLOR = 0
 
----THEME_FOCUS_COLOR
+---THEME_FOCUS_COLOR (deprecated)
 ---@type integer
 THEME_FOCUS_COLOR = 0
+
+---THEME_HIGHLIGHT_COLOR
+---@type integer
+THEME_HIGHLIGHT_COLOR = 0
+
+---THEME_HIGHLIGHT_INVERT_COLOR
+---@type integer
+THEME_HIGHLIGHT_INVERT_COLOR = 0
+
+---THEME_INACTIVE_COLOR
+---@type integer
+THEME_INACTIVE_COLOR = 0
+
+---THEME_MIXER_OUTPUT_COLOR
+---@type integer
+THEME_MIXER_OUTPUT_COLOR = 0
+
+---THEME_PAGE_BGCOLOR
+---@type integer
+THEME_PAGE_BGCOLOR = 0
 
 ---THEME_PRIMARY_BGCOLOR
 ---@type integer
@@ -2166,6 +2202,11 @@ function lcd.drawText(x, y, text, flags) end
 ---@param y3 number # Y3 coordinate
 function lcd.drawTriangle(x1, y1, x2, y2, x3, y3) end
 
+---Return the focus style.
+---Since: 26.1.0
+---@return string focusStyle # focusStyle
+function lcd.focusStyle() end
+
 ---Get / Set the current font.
 ---Since: 1.1.0
 ---@param font integer # one of the available fonts (FONT_M, FONT_M_BOLD, FONT_M_ITALIC, FONT_XS, FONT_XS_BOLD, FONT_S, FONT_L, FONT_L_BOLD, FONT_XL, FONT_XXL)
@@ -2672,6 +2713,11 @@ function system.registerSystemTool(params) end
 ---Since: 1.5.0
 ---@param params? any # table with elements: key (string, 7 chars max): task key name (string or function): task name init (function, optional): handler called on task init done (function, optional): handler called on task stop event (function, optional): handler called at each event wakeup (function, optional): handler called at each loop read (function, optional): optional read handler write (function, optional): optional write handler configure (function, optional): handler called on task configuration
 function system.registerTask(params) end
+
+---Register a Lua Theme.
+---Since: 26.1.0
+---@param params? any # table with elements: key (string): unique key, with 7 chars max focus (string, default="invert"): focus style ("outline", "invert", or "color") roundButtons (boolean, optional): whether to use round buttons or not
+function system.registerTheme(params) end
 
 ---Register a Lua Widget.
 ---Since: 1.1.0
