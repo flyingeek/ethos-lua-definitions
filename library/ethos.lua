@@ -1017,10 +1017,6 @@ CURVE_TYPE_EXPO = 0
 ---@type integer
 CURVE_TYPE_FUNCTION = 0
 
----CYAN (deprecated)
----@type integer
-CYAN = 0
-
 ---DOTTED Pen (deprecated)
 ---@type integer
 DOTTED = 0
@@ -1233,10 +1229,6 @@ LOGIC_SWITCH_FUNCTION_TIMER = 0
 ---@type integer
 LOGIC_SWITCH_FUNCTION_XOR = 0
 
----MAGENTA (deprecated)
----@type integer
-MAGENTA = 0
-
 ---Radio Main Voltage (deprecated)
 ---@type integer
 MAIN_VOLTAGE = 0
@@ -1441,6 +1433,10 @@ THEME_DEFAULT_COLOR = 0
 ---@type integer
 THEME_DISABLE_COLOR = 0
 
+---THEME_ERROR_COLOR
+---@type integer
+THEME_ERROR_COLOR = 0
+
 ---THEME_FOCUS_BGCOLOR (deprecated)
 ---@type integer
 THEME_FOCUS_BGCOLOR = 0
@@ -1453,17 +1449,13 @@ THEME_FOCUS_COLOR = 0
 ---@type integer
 THEME_HIGHLIGHT_COLOR = 0
 
----THEME_HIGHLIGHT_INVERT_COLOR
+---THEME_HIGHLIGHT_CONTRASTING_COLOR
 ---@type integer
-THEME_HIGHLIGHT_INVERT_COLOR = 0
+THEME_HIGHLIGHT_CONTRASTING_COLOR = 0
 
 ---THEME_INACTIVE_COLOR
 ---@type integer
 THEME_INACTIVE_COLOR = 0
-
----THEME_MIXER_OUTPUT_COLOR
----@type integer
-THEME_MIXER_OUTPUT_COLOR = 0
 
 ---THEME_PAGE_BGCOLOR
 ---@type integer
@@ -1476,6 +1468,14 @@ THEME_PRIMARY_BGCOLOR = 0
 ---THEME_PRIMARY_COLOR
 ---@type integer
 THEME_PRIMARY_COLOR = 0
+
+---THEME_SAFE_COLOR
+---@type integer
+THEME_SAFE_COLOR = 0
+
+---THEME_SAFE_CONTRASTING_COLOR
+---@type integer
+THEME_SAFE_CONTRASTING_COLOR = 0
 
 ---THEME_SECONDARY_BGCOLOR
 ---@type integer
@@ -2088,8 +2088,9 @@ lcd = {}
 ---@return integer color # color
 function lcd.color(color) end
 
----Return true if the dark mode is enable.
+---Return true if the dark mode is enable (deprecated)
 ---Since: 1.5.3
+---@deprecated
 ---@return boolean darkMode # darkMode
 function lcd.darkMode() end
 
@@ -2212,6 +2213,12 @@ function lcd.focusStyle() end
 ---@param font integer # one of the available fonts (FONT_M, FONT_M_BOLD, FONT_M_ITALIC, FONT_XS, FONT_XS_BOLD, FONT_S, FONT_L, FONT_L_BOLD, FONT_XL, FONT_XXL)
 ---@return integer font # font
 function lcd.font(font) end
+
+---Get the contrasting color for a given background.
+---Since: 26.1.0
+---@param color integer
+---@return integer color # color
+function lcd.getContrastingColor(color) end
 
 ---Get the dimensions that will be taken up with text when using the current parameters.
 ---Since: 1.1.0
@@ -2716,7 +2723,7 @@ function system.registerTask(params) end
 
 ---Register a Lua Theme.
 ---Since: 26.1.0
----@param params? any # table with elements: key (string): unique key, with 7 chars max focus (string, default="invert"): focus style ("outline", "invert", or "color") roundButtons (boolean, optional): whether to use round buttons or not
+---@param params? any # table with elements: key (string): unique key, with 7 chars max name (string or function): theme name focusStyle (string, default="invert"): focus style ("outline", "invert", or "color") borderWidth (number, default=2): widgets border width toolbarBackground (bitmap): top toolbar background bitmap toolbarLogo (bitmap): top toolbar logo colors (table): theme colors roundButtons (boolean, optional): whether to use round buttons or not
 function system.registerTheme(params) end
 
 ---Register a Lua Widget.
