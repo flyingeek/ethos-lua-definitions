@@ -55,6 +55,11 @@ jobs:
           path: LLS-Addons
           submodules: false
 
+      - name: Sync fork with upstream
+        run: gh repo sync flyingeek/LLS-Addons --source LuaLS/LLS-Addons --branch main
+        env:
+          GITHUB_TOKEN: ${{ secrets.ADDON_PAT }}
+
       - name: Update submodule and Create PR
         working-directory: LLS-Addons
         run: |
@@ -65,7 +70,7 @@ jobs:
           CLEAN_VERSION=$(echo "${{ github.event.inputs.version }}" | tr -cd '[:alnum:].-')
           BRANCH_NAME="update-ethos-addon-${CLEAN_VERSION}"
 
-          git checkout -b $BRANCH_NAME
+          git checkout -B $BRANCH_NAME
 
           # Init only the ethos submodule (avoid broken submodules from other addons)
           git submodule update --init addons/ethos/module
@@ -78,13 +83,17 @@ jobs:
             echo "No changes to submodule."
           else
             git commit -m "Update ethos addon to ${{ github.event.inputs.version }}"
-            git push origin $BRANCH_NAME
+            git push --force origin $BRANCH_NAME
 
-            gh pr create --repo LuaLS/LLS-Addons \
-                         --title "Update ethos addon to ${{ github.event.inputs.version }}" \
-                         --body "Automated update of ETHOS Lua definitions to version ${{ github.event.inputs.version }}." \
-                         --head flyingeek:$BRANCH_NAME \
-                         --base main
+            if gh pr view --repo LuaLS/LLS-Addons --head flyingeek:$BRANCH_NAME &>/dev/null; then
+              echo "PR already exists, skipping creation."
+            else
+              gh pr create --repo LuaLS/LLS-Addons \
+                           --title "Update ethos addon to ${{ github.event.inputs.version }}" \
+                           --body "Automated update of ETHOS Lua definitions to version ${{ github.event.inputs.version }}." \
+                           --head flyingeek:$BRANCH_NAME \
+                           --base main
+            fi
           fi
         env:
           GITHUB_TOKEN: ${{ secrets.ADDON_PAT }}
