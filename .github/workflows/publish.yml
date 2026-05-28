@@ -85,15 +85,11 @@ jobs:
             git commit -m "Update ethos addon to ${{ github.event.inputs.version }}"
             git push --force origin $BRANCH_NAME
 
-            if gh pr view --repo LuaLS/LLS-Addons --head flyingeek:$BRANCH_NAME &>/dev/null; then
-              echo "PR already exists, skipping creation."
-            else
-              gh pr create --repo LuaLS/LLS-Addons \
-                           --title "Update ethos addon to ${{ github.event.inputs.version }}" \
-                           --body "Automated update of ETHOS Lua definitions to version ${{ github.event.inputs.version }}." \
-                           --head flyingeek:$BRANCH_NAME \
-                           --base main
-            fi
+            gh pr create --repo LuaLS/LLS-Addons \
+                         --title "Update ethos addon to ${{ github.event.inputs.version }}" \
+                         --body "Automated update of ETHOS Lua definitions to version ${{ github.event.inputs.version }}." \
+                         --head flyingeek:$BRANCH_NAME \
+                         --base main
           fi
         env:
           GITHUB_TOKEN: ${{ secrets.ADDON_PAT }}
