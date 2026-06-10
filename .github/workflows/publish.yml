@@ -97,9 +97,6 @@ jobs:
             git commit -m "Update ethos addon to $VERSION"
             git push --force origin $BRANCH_NAME
 
-            gh auth status
-            gh repo view LuaLS/LLS-Addons --json nameWithOwner
-
             gh pr create --repo LuaLS/LLS-Addons \
                          --title "Update ethos addon to $VERSION" \
                          --body "Automated update of ETHOS Lua definitions to version $VERSION." \
