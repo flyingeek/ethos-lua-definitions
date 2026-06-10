@@ -1,0 +1,31 @@
+{
+  "version": "2.0.0",
+  "tasks": [
+    {
+      "label": "Update lua-doc and generate definitions",
+      "type": "shell",
+      "command": "bash tools/update_lua_doc.sh ${input:luaDocUrl} && python3 tools/generate_luals_definitions.py",
+      "group": "build",
+      "problemMatcher": []
+    },
+    {
+      "label": "Publish release tag",
+      "type": "shell",
+      "command": "bash -c 'set -e; TAG=\"${1}\"; if ! git diff-index --quiet HEAD; then echo \"Error: git status is not clean\"; exit 1; fi; if git rev-parse \"$TAG\" >/dev/null 2>&1; then echo \"Error: tag $TAG already exists\"; exit 1; fi; git tag \"$TAG\" && git push origin \"$TAG\"' -- ${input:releaseTag}",
+      "group": "build",
+      "problemMatcher": []
+    }
+  ],
+  "inputs": [
+    {
+      "id": "luaDocUrl",
+      "type": "promptString",
+      "description": "URL to lua-doc.zip (e.g. https://github.com/FrSkyRC/ETHOS-Feedback-Community/releases/download/26.1.0-RC4/lua-doc.zip)"
+    },
+    {
+      "id": "releaseTag",
+      "type": "promptString",
+      "description": "Release tag (e.g. 26.1.0-RC1 or 26.1.0-2026.04.30)"
+    }
+  ]
+}

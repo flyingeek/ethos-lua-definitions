@@ -1,6 +1,9 @@
 name: Update LuaLS Addon
 
 on:
+  push:
+    tags:
+      - 'release/**'
   workflow_dispatch:
     inputs:
       version:
@@ -15,6 +18,14 @@ jobs:
   update-addon:
     runs-on: ubuntu-latest
     steps:
+      - name: Resolve version
+        run: |
+          if [ "${{ github.event_name }}" = "push" ]; then
+            VERSION="${GITHUB_REF_NAME#release/}"
+          else
+            VERSION=${{ github.event.inputs.version }}
+          fi
+          echo "VERSION=$VERSION" >> "$GITHUB_ENV"
       - name: Checkout main source
         uses: actions/checkout@v4
         with:
@@ -43,8 +54,9 @@ jobs:
           if git diff-index --quiet HEAD; then
             echo "No changes to commit."
           else
-            git commit -m "Update ethos.lua to ${{ github.event.inputs.version }}"
-            git push origin luals-addon
+            git commit -m "Update ethos.lua to $VERSION"
+            git tag "$VERSION"
+            git push origin luals-addon --tags
           fi
 
       - name: Checkout LLS-Addons fork
@@ -67,7 +79,7 @@ jobs:
           git config user.email "github-actions[bot]@users.noreply.github.com"
 
           # Replace invalid branch chars safely
-          CLEAN_VERSION=$(echo "${{ github.event.inputs.version }}" | tr -cd '[:alnum:].-')
+          CLEAN_VERSION=$(echo "$VERSION" | tr -cd '[:alnum:].-')
           BRANCH_NAME="update-ethos-addon-${CLEAN_VERSION}"
 
           git checkout -B $BRANCH_NAME
@@ -82,12 +94,12 @@ jobs:
           if git diff-index --quiet HEAD; then
             echo "No changes to submodule."
           else
-            git commit -m "Update ethos addon to ${{ github.event.inputs.version }}"
+            git commit -m "Update ethos addon to $VERSION"
             git push --force origin $BRANCH_NAME
 
             gh pr create --repo LuaLS/LLS-Addons \
-                         --title "Update ethos addon to ${{ github.event.inputs.version }}" \
-                         --body "Automated update of ETHOS Lua definitions to version ${{ github.event.inputs.version }}." \
+                         --title "Update ethos addon to $VERSION" \
+                         --body "Automated update of ETHOS Lua definitions to version $VERSION." \
                          --head flyingeek:$BRANCH_NAME \
                          --base main
           fi
