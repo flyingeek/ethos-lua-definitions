@@ -2518,6 +2518,12 @@ function simulator.setAnalog(analog, value) end
 ---@param table any # { sec, min, hour, day, month, year, lock }
 function simulator.setDateTime(table) end
 
+---Enable / Disable debug.
+---Since: 26.1.0
+---@param command string # only "malloc" allowed
+---@param value boolean
+function simulator.setDebug(command, value) end
+
 ---Load a model.
 ---Since: 1.5.0
 ---@param path string
