@@ -11,7 +11,7 @@
     {
       "label": "Publish release tag",
       "type": "shell",
-      "command": "bash -c 'set -e; TAG=\"${1}\"; if ! git diff-index --quiet HEAD; then echo \"Error: git status is not clean\"; exit 1; fi; if git rev-parse \"$TAG\" >/dev/null 2>&1; then echo \"Error: tag $TAG already exists\"; exit 1; fi; git tag \"$TAG\" && git push origin \"$TAG\"' -- ${input:releaseTag}",
+      "command": "bash -c 'set -e; TAG=\"${1}\"; if ! git diff-index --quiet HEAD; then echo \"Error: git status is not clean\"; exit 1; fi; if git rev-parse \"$TAG\" >/dev/null 2>&1; then echo \"Error: tag $TAG already exists. To delete locally and on origin: git tag -d $TAG && git push origin :$TAG\"; exit 1; fi; git tag \"$TAG\" && git push origin \"$TAG\"' -- ${input:releaseTag}",
       "group": "build",
       "problemMatcher": []
     }
@@ -25,7 +25,7 @@
     {
       "id": "releaseTag",
       "type": "promptString",
-      "description": "Release tag (e.g. 26.1.0-RC1 or 26.1.0-2026.04.30)"
+      "description": "Release tag (e.g. release/26.1.0-RC1 or release/26.1.0-2026.04.30)"
     }
   ]
 }
