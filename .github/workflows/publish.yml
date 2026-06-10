@@ -70,7 +70,7 @@ jobs:
       - name: Sync fork with upstream
         run: gh repo sync flyingeek/LLS-Addons --source LuaLS/LLS-Addons --branch main
         env:
-          GITHUB_TOKEN: ${{ secrets.ADDON_PAT }}
+          GH_TOKEN: ${{ secrets.ADDON_PAT }}
 
       - name: Update submodule and Create PR
         working-directory: LLS-Addons
@@ -97,7 +97,8 @@ jobs:
             git commit -m "Update ethos addon to $VERSION"
             git push --force origin $BRANCH_NAME
 
-            echo $GITHUB_TOKEN | gh auth login --with-token
+            gh auth status
+            gh repo view LuaLS/LLS-Addons --json nameWithOwner
 
             gh pr create --repo LuaLS/LLS-Addons \
                          --title "Update ethos addon to $VERSION" \
@@ -106,4 +107,4 @@ jobs:
                          --base main
           fi
         env:
-          GITHUB_TOKEN: ${{ secrets.ADDON_PAT }}
+          GH_TOKEN: ${{ secrets.ADDON_PAT }}
