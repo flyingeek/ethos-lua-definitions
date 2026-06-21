@@ -558,6 +558,36 @@ def parse_items(page_html: str, owner: str) -> tuple[list[Item], dict[str, list[
                         parameter.type_name = f"{parameter.type_name}|nil"
                     break
 
+        # model.getTimer/getCurve/getLogicSwitch/getChannel accept a name OR index, not both.
+        if owner == "model" and item_kind == "function" and item_name in {"getTimer", "getCurve", "getLogicSwitch", "getChannel"}:
+            params = [Parameter(name="name_or_index", type_name="string|integer")]
+
+        # Source:stringUnit returns the unit as a string (e.g. "V", "A"), not an integer despite what docs say.
+        if owner == "Source" and item_kind == "function" and item_name == "stringUnit":
+            item_returns = [ReturnValue(name="unit", type_name="string", description="unit")]
+
+        # Source:value and Source:stringValue have richer signatures than the docs show.
+        # value() can set a value (nil|integer|number|string) or read with an options table.
+        if owner == "Source" and item_kind == "function" and item_name == "value":
+            params = [
+                Parameter(name="value", type_name="nil|integer|number|string|table", optional=True),
+                Parameter(name="options", type_name="table|nil", optional=True),
+            ]
+            item_returns = [ReturnValue(name="value", type_name="nil|integer|number|string", description="value")]
+
+        # stringValue() mirrors the same dual-use signature.
+        if owner == "Source" and item_kind == "function" and item_name == "stringValue":
+            params = [
+                Parameter(name="value", type_name="nil|integer|number|string|table", optional=True),
+                Parameter(name="options", type_name="table|nil", optional=True),
+            ]
+
+        # Source:decimals can be called without arguments to get the value.
+        if owner == "Source" and item_kind == "function" and item_name == "decimals":
+            for parameter in params:
+                if parameter.name == "decimals":
+                    parameter.optional = True
+
         items.append(
             Item(
                 owner=owner,

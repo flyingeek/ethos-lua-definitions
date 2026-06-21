@@ -680,7 +680,7 @@ function Source:crsfId(crsfId) end
 
 ---Return the source decimals (and modify it on Vars and Sensors)
 ---Since: 1.5.5
----@param decimals integer
+---@param decimals? integer
 ---@return integer decimals # decimals
 function Source:decimals(decimals) end
 
@@ -748,14 +748,15 @@ function Source:state() end
 
 ---Return the source unit.
 ---Since: 1.1.0
----@return integer unit # unit
+---@return string unit # unit
 function Source:stringUnit() end
 
 ---Return the source value as a string.
 ---Since: 1.1.0
----@param options? integer
+---@param value? nil|integer|number|string|table
+---@param options? table|nil
 ---@return string value # value
-function Source:stringValue(options) end
+function Source:stringValue(value, options) end
 
 ---Get or set the subId of the source if it is a CRSF or a FrSky sensor.
 ---Since: 1.6.2 source = system.getSource({ name = "Tx SNR" }) print(source: name ().. " module:".. source:module().. " crsfId:".. source: crsfId ()).. " subId:".. source: subId ())
@@ -771,9 +772,10 @@ function Source:unit(unit) end
 
 ---Return the source value / Set the source value on Lua sources / Vars / Telemetry sensors.
 ---Since: 1.1.0
----@param options? integer
+---@param value? nil|integer|number|string|table
+---@param options? table|nil
 ---@return nil|integer|number|string value # value
-function Source:value(options) end
+function Source:value(value, options) end
 
 ---@class Timer
 local Timer = {}
@@ -2369,24 +2371,21 @@ function model.dirty() end
 
 ---Return output channel information.
 ---Since: 1.6.0
----@param Name string
----@param Index integer
+---@param name_or_index string|integer
 ---@return Channel result # channel
-function model.getChannel(Name, Index) end
+function model.getChannel(name_or_index) end
 
 ---Return a curve by name or by index.
 ---Since: 1.1.0
----@param Name string
----@param Index integer
+---@param name_or_index string|integer
 ---@return Curve result # curve
-function model.getCurve(Name, Index) end
+function model.getCurve(name_or_index) end
 
 ---Return a logic switch by name or by index.
 ---Since: 26.1.0
----@param Name string
----@param Index integer
+---@param name_or_index string|integer
 ---@return LogicSwitch result # logic switch
-function model.getLogicSwitch(Name, Index) end
+function model.getLogicSwitch(name_or_index) end
 
 ---Return module information.
 ---Since: 1.5.0
@@ -2396,10 +2395,9 @@ function model.getModule(Index) end
 
 ---Return a timer by name or by index.
 ---Since: 1.1.0
----@param Name string
----@param Index integer
+---@param name_or_index string|integer
 ---@return Timer result # timer
-function model.getTimer(Name, Index) end
+function model.getTimer(name_or_index) end
 
 ---Get the model ids (internal and external modules)
 ---Since: 1.3.2
