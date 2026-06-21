@@ -82,6 +82,8 @@ jobs:
           CLEAN_VERSION=$(echo "$VERSION" | tr -cd '[:alnum:].-')
           BRANCH_NAME="update-ethos-addon-${CLEAN_VERSION}"
 
+          git pull origin main
+
           git checkout -B $BRANCH_NAME
 
           # Init only the ethos submodule (avoid broken submodules from other addons)
