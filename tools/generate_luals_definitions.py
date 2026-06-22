@@ -566,20 +566,18 @@ def parse_items(page_html: str, owner: str) -> tuple[list[Item], dict[str, list[
         if owner == "Source" and item_kind == "function" and item_name == "stringUnit":
             item_returns = [ReturnValue(name="unit", type_name="string", description="unit")]
 
-        # Source:value and Source:stringValue have richer signatures than the docs show.
-        # value() can set a value (nil|integer|number|string) or read with an options table.
+        # Source:value and Source:stringValue accept a single argument that is either a value
+        # (to set) or an options table (to read with options). The two uses cannot be combined.
         if owner == "Source" and item_kind == "function" and item_name == "value":
             params = [
-                Parameter(name="value", type_name="nil|integer|number|string|table", optional=True),
-                Parameter(name="options", type_name="table|nil", optional=True),
+                Parameter(name="value_or_options", type_name="nil|integer|number|string|{options: integer}", optional=True),
             ]
             item_returns = [ReturnValue(name="value", type_name="nil|integer|number|string", description="value")]
 
-        # stringValue() mirrors the same dual-use signature.
+        # stringValue() mirrors the same single-argument signature.
         if owner == "Source" and item_kind == "function" and item_name == "stringValue":
             params = [
-                Parameter(name="value", type_name="nil|integer|number|string|table", optional=True),
-                Parameter(name="options", type_name="table|nil", optional=True),
+                Parameter(name="value_or_options", type_name="nil|integer|number|string|{options: integer}", optional=True),
             ]
 
         # Source:decimals can be called without arguments to get the value.
