@@ -587,6 +587,13 @@ def parse_items(page_html: str, owner: str) -> tuple[list[Item], dict[str, list[
         if owner == "model" and item_kind == "function" and item_name in {"getTimer", "getCurve", "getLogicSwitch", "getChannel"}:
             params = [Parameter(name="name_or_index", type_name="string|integer")]
 
+        # model.createMix(name, params) — docs omit both parameters.
+        if owner == "model" and item_kind == "function" and item_name == "createMix":
+            params = [
+                Parameter(name="name", type_name="string"),
+                Parameter(name="params", type_name="table", optional=True),
+            ]
+
         # Source:stringUnit returns the unit as a string (e.g. "V", "A"), not an integer despite what docs say.
         if owner == "Source" and item_kind == "function" and item_name == "stringUnit":
             item_returns = [ReturnValue(name="unit", type_name="string", description="unit")]
@@ -605,11 +612,41 @@ def parse_items(page_html: str, owner: str) -> tuple[list[Item], dict[str, list[
                 Parameter(name="value_or_options", type_name="nil|integer|number|string|{options: integer}", optional=True),
             ]
 
+        # Source:maximum and Source:minimum accept an optional value to set.
+        if owner == "Source" and item_kind == "function" and item_name in {"maximum", "minimum"}:
+            if not params:
+                params = [Parameter(name="value", type_name="number", optional=True)]
+
         # Source:decimals can be called without arguments to get the value.
         if owner == "Source" and item_kind == "function" and item_name == "decimals":
             for parameter in params:
                 if parameter.name == "decimals":
                     parameter.optional = True
+
+        # Timer:stopCondition accepts an optional condition to set.
+        if owner == "Timer" and item_kind == "function" and item_name == "stopCondition":
+            params = [Parameter(name="condition", type_name="any", optional=True)]
+
+        # MultimoduleSensor:popFrame accepts an optional filter table.
+        if owner == "MultimoduleSensor" and item_kind == "function" and item_name == "popFrame":
+            params = [Parameter(name="filter", type_name="table", optional=True)]
+
+        # Module:option accepts an optional second value argument.
+        if owner == "Module" and item_kind == "function" and item_name == "option":
+            params = [
+                Parameter(name="name", type_name="string", optional=True),
+                Parameter(name="value", type_name="integer", optional=True),
+            ]
+
+        # model.createSensor accepts an optional params table.
+        if owner == "model" and item_kind == "function" and item_name == "createSensor":
+            params = [Parameter(name="params", type_name="table", optional=True)]
+
+        # system.register*Module functions accept a params table.
+        if owner == "system" and item_kind == "function" and item_name in {
+            "registerCrossfireModule", "registerElrsModule", "registerMlrsModule"
+        }:
+            params = [Parameter(name="params", type_name="table")]
 
         items.append(
             Item(

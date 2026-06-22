@@ -586,9 +586,10 @@ function Module:muteSensorLost(duration) end
 ---module.option("Disable channel mapping", 0x01000000)
 ---```
 ---Since: 1.6.0
----@param name? string # , value (integer, optional)
+---@param name? string
+---@param value? integer
 ---@return integer value # value
-function Module:option(name) end
+function Module:option(name, value) end
 
 ---Get the state of all module options.
 ---```lua
@@ -619,8 +620,9 @@ local MultimoduleSensor = {}
 ---local data = sensor:popFrame({type=0x04}) -- frames from Spektrum sensors
 ---```
 ---Since: 1.6.0
+---@param filter? table
 ---@return nil|any result # table
-function MultimoduleSensor:popFrame() end
+function MultimoduleSensor:popFrame(filter) end
 
 ---Push a Multimodule frame.
 ---```lua
@@ -823,8 +825,9 @@ function Source:drop() end
 ---print(source:maximum())
 ---```
 ---Since: 1.5.0
+---@param value? number
 ---@return number value # value
-function Source:maximum() end
+function Source:maximum(value) end
 
 ---Return the source member.
 ---Since: 1.1.2
@@ -838,8 +841,9 @@ function Source:member() end
 ---print(source:minimum())
 ---```
 ---Since: 1.5.0
+---@param value? number
 ---@return number value # value
-function Source:minimum() end
+function Source:minimum(value) end
 
 ---Return the source name (and modify it on Vars and Sensors)
 ---Since: 1.5.5
@@ -1080,8 +1084,9 @@ function Timer:startCondition(condition) end
 ---print(time:stopCondition())
 ---```
 ---Since: 26.1.0
+---@param condition? any
 ---@return Source none_or_condition # None or condition
-function Timer:stopCondition() end
+function Timer:stopCondition(condition) end
 
 ---Return the timer value as a string.
 ---```lua
@@ -2767,7 +2772,9 @@ function model.createLogicSwitch() end
 ---local mix = model.createMix("free", {actions={{action="offset", condition=armSwitch, active=100, inactive=0}}})
 ---```
 ---Since: 1.6.0
-function model.createMix() end
+---@param name string
+---@param params? table
+function model.createMix(name, params) end
 
 ---Create a sensor.
 ---```lua
@@ -2782,8 +2789,9 @@ function model.createMix() end
 ---sensor3:value(100)
 ---```
 ---Since: 1.5.5
+---@param params? table
 ---@return Source result # the source of the created sensor
-function model.createSensor() end
+function model.createSensor(params) end
 
 ---Create a timer.
 ---```lua
@@ -3206,7 +3214,8 @@ function system.playTone(frequency, duration, pause) end
 ---end
 ---```
 ---Since: 1.3.1
-function system.registerCrossfireModule() end
+---@param params table
+function system.registerCrossfireModule(params) end
 
 ---Register the ELRS Module.
 ---```lua
@@ -3215,7 +3224,8 @@ function system.registerCrossfireModule() end
 ---end
 ---```
 ---Since: 1.3.1
-function system.registerElrsModule() end
+---@param params table
+function system.registerElrsModule(params) end
 
 ---Register the Ghost Module.
 ---```lua
@@ -3248,7 +3258,8 @@ function system.registerLayout(params) end
 ---end
 ---```
 ---Since: 26.1.0
-function system.registerMlrsModule() end
+---@param params table
+function system.registerMlrsModule(params) end
 
 ---Register a Multimodule Protocol.
 ---```lua
