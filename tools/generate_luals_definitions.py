@@ -84,6 +84,7 @@ class Item:
     params: list[Parameter] = field(default_factory=list)
     returns: list[ReturnValue] = field(default_factory=list)
     return_struct: str | None = None
+    examples: list[str] = field(default_factory=list)
 
 
 def read_text(path: Path) -> str:
@@ -193,6 +194,25 @@ def normalize_type(text: str) -> str:
     return "|".join(deduped) if deduped else "any"
 
 
+def strip_tags_for_code(value: str) -> str:
+    """Strip HTML tags for code lines without inserting spaces where tags were."""
+    value = re.sub(r"<[^>]+>", "", value)
+    value = html.unescape(value)
+    value = value.replace("\xa0", " ")
+    return value.strip()
+
+
+def parse_examples(memdoc_html: str) -> list[str]:
+    examples: list[str] = []
+    for fragment in re.findall(r'<div class="fragment">(.*?)</div><!-- fragment -->', memdoc_html, flags=re.S):
+        raw_lines = re.findall(r'<div class="line">(.*?)</div>', fragment, flags=re.S)
+        if not raw_lines:
+            continue
+        code_lines = [strip_tags_for_code(line) for line in raw_lines]
+        examples.append("\n".join(code_lines))
+    return examples
+
+
 def parse_first_paragraph(memdoc_html: str) -> str:
     match = re.search(r"<p[^>]*>(.*?)</p>", memdoc_html, flags=re.S)
     return clean_doc(match.group(1)) if match else ""
@@ -200,7 +220,11 @@ def parse_first_paragraph(memdoc_html: str) -> str:
 
 def parse_since(memdoc_html: str) -> str | None:
     match = re.search(r'<dl class="section since"><dt>Since</dt><dd>(.*?)</dd></dl>', memdoc_html, flags=re.S)
-    return clean_doc(match.group(1)) if match else None
+    if not match:
+        return None
+    # Strip embedded example fragments before extracting the version string.
+    since_text = re.sub(r'<div class="fragment">.*?</div><!-- fragment -->', '', match.group(1), flags=re.S)
+    return clean_doc(since_text) or None
 
 
 def parse_deprecated(memdoc_html: str) -> bool:
@@ -471,6 +495,7 @@ def parse_items(page_html: str, owner: str) -> tuple[list[Item], dict[str, list[
         item_returns, item_structs = parse_returns(memdoc_html, owner, item_name)
         structs.update(item_structs)
         description = parse_first_paragraph(memdoc_html)
+        item_examples = parse_examples(memdoc_html)
         deprecated = parse_deprecated(memdoc_html) or "(deprecated" in description.lower() or description.strip().lower() == "deprecated"
         params = parse_parameters(memdoc_html)
 
@@ -597,6 +622,7 @@ def parse_items(page_html: str, owner: str) -> tuple[list[Item], dict[str, list[
                 params=params,
                 returns=item_returns,
                 return_struct=next(iter(item_structs), None),
+                examples=item_examples,
             )
         )
 
@@ -672,6 +698,11 @@ def emit_return(lines: list[str], return_value: ReturnValue) -> None:
 
 def emit_function(lines: list[str], prefix: str, item: Item, method: bool) -> None:
     emit_comment(lines, item.description)
+    for example in item.examples:
+        lines.append("---```lua")
+        for code_line in example.splitlines():
+            lines.append(f"---{code_line}")
+        lines.append("---```")
     if item.since:
         lines.append(f"---Since: {item.since}")
     if item.deprecated:
