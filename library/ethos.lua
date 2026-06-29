@@ -118,6 +118,12 @@ function ChoiceLib:values(values) end
 local CrsfSensor = {}
 
 ---Pop a CRSF frame.
+---```lua
+---local sensor = crsf.getSensor()
+---local command, data = sensor:popFrame() -- all frames
+---local command, data = sensor:popFrame(0x10) -- VTX frames
+---local command, data = sensor:popFrame(0x7A, 0x7B) -- MSP frames
+---```
 ---Since: 1.6.0
 ---@param commandFilterMin? integer
 ---@param commandFilterMax? integer
@@ -126,6 +132,9 @@ local CrsfSensor = {}
 function CrsfSensor:popFrame(commandFilterMin, commandFilterMax) end
 
 ---Push a CRSF frame.
+---```lua
+---sensor:pushFrame(0x2D, { 0x00, 0xEA })
+---```
 ---Since: 1.4.0
 ---@param command integer
 ---@param data table
@@ -204,6 +213,10 @@ local Dialog = {}
 local ExpansionPanel = {}
 
 ---Add a new line to the expansion panel.
+---```lua
+---panel:addLine("Label")
+---panel:addLine("Label", false) -- no separator
+---```
 ---Since: 1.5.4
 ---@param label string # the line label
 ---@param separator? boolean # separator after the line
@@ -267,11 +280,29 @@ function FrSkyStaticTextLib:value(value) end
 local GlassesLayout = {}
 
 ---Clear layout and display text.
+---```lua
+---local function wakeup(context)
+---context.layout:clearAndDisplay("ARMED!")
+---end
+---```
 ---Since: 26.1.0
 ---@param text string
 function GlassesLayout:clearAndDisplay(text) end
 
 ---Clear layout and display text at position x, y with optional extra commands.
+---```lua
+---local function wakeup(context)
+---context.layout:clearAndDisplayExtended({
+---x=10,
+---y=10,
+---text="ARMED!",
+---commands={
+---{text={text="Extra1", font=2, x=10, y=10}},
+---{text={text="Extra2", font=2, x=50, y=10}},
+---{bitmap={id=10, x=10, y=40}}
+---}})
+---end
+---```
 ---Since: 26.1.0
 ---@param params any # table with elements: x (integer): left y (integer): top text (text): text commands (table): table of extra commands (font, text, bitmap)
 function GlassesLayout:clearAndDisplayExtended(params) end
@@ -280,59 +311,100 @@ function GlassesLayout:clearAndDisplayExtended(params) end
 local LogicSwitch = {}
 
 ---Get / Set the active condition of the logic switch.
+---```lua
+---ls = model.getLogicSwitch(0)
+---ls:activeCondition(CATEGORY_ALWAYS_ON)
+---```
 ---Since: 1.1.0
 ---@param condition? any
 ---@return Source condition # condition
 function LogicSwitch:activeCondition(condition) end
 
 ---Get / Set the logic switch delay OFF.
+---```lua
+---ls = model.getLogicSwitch(0)
+---ls:delayOff(100)
+---```
 ---Since: 26.1.0
 ---@param delayOff? integer
 ---@return integer delayOff # delayOff
 function LogicSwitch:delayOff(delayOff) end
 
 ---Get / Set the logic switch delay ON.
+---```lua
+---ls = model.getLogicSwitch(0)
+---ls:delayOn(100)
+---```
 ---Since: 26.1.0
 ---@param delayOn? integer
 ---@return integer delayOn # delayOn
 function LogicSwitch:delayOn(delayOn) end
 
 ---Get / Set the function of the logic switch.
+---```lua
+---ls = model.getLogicSwitch(0)
+---ls:func(LOGIC_SWITCH_FUNCTION_AROUND)
+---```
 ---Since: 26.1.0
 ---@param function_value? integer
 ---@return integer function_value # function
 LogicSwitch["function"] = function(self, function_value) end
 
 ---Get / Set the logic switch max duration.
+---```lua
+---ls = model.getLogicSwitch(0)
+---ls:maxDuration(100)
+---```
 ---Since: 26.1.0
 ---@param maxDuration? integer
 ---@return integer maxDuration # maxDuration
 function LogicSwitch:maxDuration(maxDuration) end
 
 ---Get / Set the logic switch min duration.
+---```lua
+---ls = model.getLogicSwitch(0)
+---ls:minDuration(100)
+---```
 ---Since: 26.1.0
 ---@param minDuration? integer
 ---@return integer minDuration # minDuration
 function LogicSwitch:minDuration(minDuration) end
 
 ---Get / Set the logic switch name.
+---```lua
+---ls = model.getLogicSwitch(0)
+---ls:name("My logic switch")
+---print(ls:name())
+---```
 ---Since: 26.1.0
 ---@param name? string
 ---@return string name # name
 function LogicSwitch:name(name) end
 
 ---Get / Set the logic switch negative attribute.
+---```lua
+---ls = model.getLogicSwitch(0)
+---ls:negative(true)
+---```
 ---Since: 26.1.0
 ---@param negative? boolean
 ---@return boolean negative # negative
 function LogicSwitch:negative(negative) end
 
 ---Get the logic switch state.
+---```lua
+---ls = model.getLogicSwitch(0)
+---print(ls:state())
+---```
 ---Since: 26.1.0
 ---@return boolean state # state
 function LogicSwitch:state() end
 
 ---Get / Set the test values of the logic switch.
+---```lua
+---ls = model.getLogicSwitch(0)
+---ls:values({{category=CATEGORY_TELEMETRY, member=0}, {category=CATEGORY_ANALOG, member=0}})
+---```
 ---Since: 26.1.0
 ---@param values? table
 ---@return table values # values
@@ -440,6 +512,9 @@ function LuaSPortSensor:physId(physId) end
 function LuaSPortSensor:popFrame() end
 
 ---Push a S.Port frame.
+---```lua
+---sensor:pushFrame({module=0, band=0, rx=0, physId=0x1B, primId=0x30, appId=0x6800, value=0x80})
+---```
 ---Since: 1.1.0
 ---@param frame LuaSPortFrame # or table {module, band, rx, physId, primId, appId, value}
 ---@return boolean result # result
@@ -499,17 +574,27 @@ local Module = {}
 function Module:enable() end
 
 ---Mute all "Sensor lost" warnings from a module during a certain duration.
+---```lua
+---module.muteSensorLost(5.0) -- Sensor lost muted during 5 seconds
+---```
 ---Since: 1.6.0
----@param duration any # in s (number)
+---@param duration any # in seconds (number)
 function Module:muteSensorLost(duration) end
 
 ---Get / Set one module option.
+---```lua
+---module.option("Disable channel mapping", 0x01000000)
+---```
 ---Since: 1.6.0
----@param name? string # , value (integer, optional)
+---@param name? string
+---@param value? integer
 ---@return integer value # value
-function Module:option(name) end
+function Module:option(name, value) end
 
 ---Get the state of all module options.
+---```lua
+---module.options()
+---```
 ---Since: 1.6.0
 ---@return table options # options
 function Module:options() end
@@ -528,11 +613,21 @@ function Module:type() end
 local MultimoduleSensor = {}
 
 ---Pop a Multimodule frame.
+---```lua
+---local sensor = multimodule.getSensor()
+---local data = sensor:popFrame() -- all frames
+---local data = sensor:popFrame({i2cAddress=0x00}) -- frames from sensor with I2C address = 0x00
+---local data = sensor:popFrame({type=0x04}) -- frames from Spektrum sensors
+---```
 ---Since: 1.6.0
+---@param filter? table
 ---@return nil|any result # table
-function MultimoduleSensor:popFrame() end
+function MultimoduleSensor:popFrame(filter) end
 
 ---Push a Multimodule frame.
+---```lua
+---sensor:pushFrame({ 0x00, 0xEA })
+---```
 ---Since: 1.6.0
 ---@param data table
 ---@return boolean result # result
@@ -575,6 +670,12 @@ function NumberEditLib:maximum(value) end
 function NumberEditLib:minimum(value) end
 
 ---Function called when the focus is changed.
+---```lua
+---local line = form.addLine("Number edit line")
+---local value = 10
+---local field = form.addNumberField(line, nil, 0, 10, function() return value end, function(newValue) value = newValue end)
+---field:onFocus(function(state) print("onFocus .. " .. state))
+---```
 ---Since: 1.5.14
 ---@param handler any # function(state)
 function NumberEditLib:onFocus(handler) end
@@ -637,6 +738,12 @@ function SliderLib:maximum(maximum) end
 function SliderLib:minimum(minimum) end
 
 ---Function called when the focus is changed.
+---```lua
+---local line = form.addLine("Slider line")
+---local value = 10
+---local field = form.addSliderField(line, nil, 0, 100, function() return value end, function(newValue) value = newValue end)
+---field:onFocus(function(state) print("onFocus .. " .. state))
+---```
 ---Since: 1.6.2
 ---@param handler any # function(state)
 function SliderLib:onFocus(handler) end
@@ -651,18 +758,32 @@ function SliderLib:step(value) end
 local Source = {}
 
 ---Get the last value age (only for Telemetry sources)
+---```lua
+---source = system.getSource("ALT")
+---print(source:age())
+---```
 ---Since: 1.6.2
 ---@return integer value_age_in_milliseconds # value age in milliseconds
 function Source:age() end
 
 ---Get or set the appId of the source if is a FrSky sensor.
----Since: 1.5.5 source = system.getSource({ name = "GPS" }) source: appId (0x0110) print(source: name ().. " module:".. source:module().. " band:".. source: band ().. " appId:".. source: appId ().. " physId:".. source: physId ()) Source::appId appId() Get or set the appId of the source if is a FrSky sensor. Definition api_source.cpp:806 Source::physId physId() Get or set the physId of the source if it is a FrSky sensor. Definition api_source.cpp:834 Source::band band() Get or set the band of the source if it is a FrSky Sensor. Definition api_source.cpp:775 Source::name name() Return the source name (and modify it on Vars and Sensors) Definition api_source.cpp:71
+---```lua
+---source = system.getSource({name="GPS"})
+---source:appId(0x0110)
+---print(source:name() .. " module:" .. source:module() .. " band:" .. source:band() .. " appId:" .. source:appId() .. " physId:" .. source:physId())
+---```
+---Since: 1.5.5
 ---@param appId? integer
 ---@return integer appId # appId
 function Source:appId(appId) end
 
 ---Get or set the band of the source if it is a FrSky Sensor.
----Since: 1.5.5 source = system.getSource({ name = "GPS" }) source: band (0) print(source: name ().. " module:".. source:module().. " band:".. source: band ().. " appId:".. source: appId ().. " physId:".. source: physId ())
+---```lua
+---source = system.getSource({name="GPS"})
+---source:band(0)
+---print(source:name() .. " module:" .. source:module() .. " band:" .. source:band() .. " appId:" .. source:appId() .. " physId:" .. source:physId())
+---```
+---Since: 1.5.5
 ---@param band? integer
 ---@return integer band # band
 function Source:band(band) end
@@ -673,7 +794,12 @@ function Source:band(band) end
 function Source:category() end
 
 ---Get or set the crsfId of the source if it is a CRSF sensor.
----Since: 1.6.2 source = system.getSource({ name = "Tx SNR" }) source: crsfId (0x0110) print(source: name ().. " module:".. source:module().. " crsfId:".. source: crsfId ()).. " subId:".. source: subId ()) Source::subId subId() Get or set the subId of the source if it is a CRSF or a FrSky sensor. Definition api_source.cpp:889 Source::crsfId crsfId() Get or set the crsfId of the source if it is a CRSF sensor. Definition api_source.cpp:862
+---```lua
+---source = system.getSource({name="Tx SNR"})
+---source:crsfId(0x0110)
+---print(source:name() .. " module:" .. source:module() .. " crsfId:" .. source:crsfId()) .. " subId:" .. source:subId())
+---```
+---Since: 1.6.2
 ---@param crsfId? integer
 ---@return integer crsfId # crsfId
 function Source:crsfId(crsfId) end
@@ -685,13 +811,23 @@ function Source:crsfId(crsfId) end
 function Source:decimals(decimals) end
 
 ---Drop a telemetry sensor.
----Since: 1.5.10 source = system.getSource({ name = "GPS" }) source: drop () Source::drop drop() Drop a telemetry sensor. Definition api_source.cpp:929
+---```lua
+---source = system.getSource({name="GPS"})
+---source:drop()
+---```
+---Since: 1.5.10
 function Source:drop() end
 
 ---Return the source maximum (and modify it on Vars and Sensors)
+---```lua
+---source = system.getSource({name="RxBatt"})
+---source:maximum(6.0)
+---print(source:maximum())
+---```
 ---Since: 1.5.0
+---@param value? number
 ---@return number value # value
-function Source:maximum() end
+function Source:maximum(value) end
 
 ---Return the source member.
 ---Since: 1.1.2
@@ -699,9 +835,15 @@ function Source:maximum() end
 function Source:member() end
 
 ---Return the source minimum (and modify it on Vars and Sensors)
+---```lua
+---source = system.getSource({name="RxBatt"})
+---source:minimum(4.5)
+---print(source:minimum())
+---```
 ---Since: 1.5.0
+---@param value? number
 ---@return number value # value
-function Source:minimum() end
+function Source:minimum(value) end
 
 ---Return the source name (and modify it on Vars and Sensors)
 ---Since: 1.5.5
@@ -715,7 +857,12 @@ function Source:name(name) end
 function Source:options() end
 
 ---Get or set the physId of the source if it is a FrSky sensor.
----Since: 1.5.5 source = system.getSource({ name = "GPS" }) source: physId (0x01) print(source: name ().. " module:".. source:module().. " band:".. source: band ().. " appId:".. source: appId ().. " physId:".. source: physId ())
+---```lua
+---source = system.getSource({name="GPS"})
+---source:physId(0x01)
+---print(source:name() .. " module:" .. source:module() .. " band:" .. source:band() .. " appId:" .. source:appId() .. " physId:" .. source:physId())
+---```
+---Since: 1.5.5
 ---@param physId? integer
 ---@return integer physId # physId
 function Source:physId(physId) end
@@ -738,6 +885,12 @@ function Source:protocolUnit(unit) end
 function Source:rawValue() end
 
 ---Reset the source (Flight / Timer / Telemetry)
+---```lua
+---source1 = system.getSource("ALT")
+---source1:reset()
+---source2 = system.getSource({category=CATEGORY_TIMER, member=0})
+---source2:reset()
+---```
 ---Since: 1.1.0
 function Source:reset() end
 
@@ -753,112 +906,211 @@ function Source:stringUnit() end
 
 ---Return the source value as a string.
 ---Since: 1.1.0
----@param value? nil|integer|number|string|table
----@param options? table|nil
+---@param value_or_options? nil|integer|number|string|{options: integer}
 ---@return string value # value
-function Source:stringValue(value, options) end
+function Source:stringValue(value_or_options) end
 
 ---Get or set the subId of the source if it is a CRSF or a FrSky sensor.
----Since: 1.6.2 source = system.getSource({ name = "Tx SNR" }) print(source: name ().. " module:".. source:module().. " crsfId:".. source: crsfId ()).. " subId:".. source: subId ())
+---```lua
+---source = system.getSource({name="Tx SNR"})
+---print(source:name() .. " module:" .. source:module() .. " crsfId:" .. source:crsfId()) .. " subId:" .. source:subId())
+---```
+---Since: 1.6.2
 ---@param crsfId? integer
 ---@return integer crsfId # crsfId
 function Source:subId(crsfId) end
 
 ---Return the source unit (and modify it on Vars and Sensors)
+---```lua
+---source1 = system.getSource("ALT")
+---print(source:unit()))
+---source:unit(UNIT_FOOT)
+---print(source:unit()))
+---```
 ---Since: 1.1.0
 ---@param unit? integer
 ---@return integer unit # unit
 function Source:unit(unit) end
 
 ---Return the source value / Set the source value on Lua sources / Vars / Telemetry sensors.
+---```lua
+---source = system.getSource({name="GPS", options=OPTION_LATITUDE})
+---print(source:value())
+---```
+---```lua
+---source = system.getSource("LiPo", options=OPTION_CELLS_COUNT)
+---print(source:value())
+---source = system.getSource("LiPo")
+---print(source:value({options=OPTION_CELLS_COUNT}))
+---print(source:value({options=OPTION_CELL_INDEX(1)}))
+---```
+---```lua
+---source = system.getSource({category=CATEGORY_CHANNEL, member=0})
+---print(source:value({options=OPTION_CHANNEL_OUTPUT+OPTION_CHANNEL_PWM}))
+---```
+---```lua
+---source = system.getSource("MySensor")
+---source:value(10) -- set the value of MySensor
+---```
 ---Since: 1.1.0
----@param value? nil|integer|number|string|table
----@param options? table|nil
+---@param value_or_options? nil|integer|number|string|{options: integer}
 ---@return nil|integer|number|string value # value
-function Source:value(value, options) end
+function Source:value(value_or_options) end
 
 ---@class Timer
 local Timer = {}
 
 ---Get / Set the alarm value of the timer.
+---```lua
+---timer = model.getTimer(0)
+---timer:alarm(120) -- seconds
+---print(timer:alarm())
+---```
 ---Since: 1.1.0
 ---@param alarm? integer
 ---@return integer alarm # alarm
 function Timer:alarm(alarm) end
 
 ---Get / Set the audio actions of the timer.
+---```lua
+---timer = model.getTimer(0)
+---timer:audioActions({
+---{type=COUNTDOWN_VALUE, start=10, step=30},
+---{type=COUNTDOWN_BEEP, start=11, step=31},
+---{type=PLAY_FILE, start=12, step=32, filename="test.wav"},
+---{type=PLAY_VALUE, start=13, step=30},
+---})
+---local audioActions = timer:audioActions()
+---```
 ---Since: 1.5.0
 ---@param actions? table
 ---@return table audio_actions # audio actions
 function Timer:audioActions(actions) end
 
 ---Get / Set the counting source of the timer.
+---```lua
+---timer = model.getTimer(0)
+---timer:countingSource()
+---```
 ---Since: 26.1.0
 ---@param source? any
 ---@return Source source # source
 function Timer:countingSource(source) end
 
 ---Get / Set the timer direction (1 / -1)
+---```lua
+---timer = model.getTimer(0)
+---timer:direction(-1)
+---```
 ---Since: 1.1.0
 ---@param direction? integer
 ---@return integer direction # direction
 function Timer:direction(direction) end
 
 ---Get / Set the timer name.
+---```lua
+---timer = model.getTimer(0)
+---timer:name("My timer")
+---print(timer:name())
+---```
 ---Since: 1.1.0
 ---@param name? string
 ---@return string name # name
 function Timer:name(name) end
 
 ---Get / Set the timer persistent attribute.
+---```lua
+---timer = model.getTimer(0)
+---timer:persistent(true)
+---```
 ---Since: 26.1.0
 ---@param persistent? boolean
 ---@return boolean persistent # persistent
 function Timer:persistent(persistent) end
 
 ---Reset the timer.
+---```lua
+---timer = model.getTimer(0)
+---timer:reset()
+---```
 ---Since: 1.4.10
 function Timer:reset() end
 
 ---Get / Set the reset condition of the timer.
+---```lua
+---timer = model.getTimer(0)
+---timer:resetCondition({category=CATEGORY_SYSTEM_EVENT, member=SYSTEM_EVENT_THROTTLE_CUT})
+---```
 ---Since: 1.1.0
 ---@param condition? any
 ---@return Source reset # reset
 function Timer:resetCondition(condition) end
 
 ---Return the running state of the timer.
+---```lua
+---timer = model.getTimer(0)
+---print(timer:running())
+---```
 ---Since: 1.5.0
 ---@return boolean running # running
 function Timer:running() end
 
 ---Get / Set the start value of the timer.
+---```lua
+---timer = model.getTimer(0)
+---timer:start(60) -- seconds
+---print(timer:start())
+---```
 ---Since: 1.1.0
 ---@param start? integer
 ---@return integer start # start
 function Timer:start(start) end
 
 ---Get / Set the start condition of the timer.
+---```lua
+---timer = model.getTimer(0)
+---timer:startCondition(CATEGORY_ALWAYS_ON)
+---```
 ---Since: 1.1.0
 ---@param condition? any
 ---@return Source condition # condition
 function Timer:startCondition(condition) end
 
 ---Get / Set the stop condition of the timer.
+---```lua
+---timer = model.getTimer(0)
+---timer:stopCondition(nil) -- will set the default stop condition
+---timer:stopCondition(CATEGORY_NONE) -- will set a custom stop condition
+---print(time:stopCondition())
+---```
 ---Since: 26.1.0
+---@param condition? any
 ---@return Source none_or_condition # None or condition
-function Timer:stopCondition() end
+function Timer:stopCondition(condition) end
 
 ---Return the timer value as a string.
+---```lua
+---timer = model.getTimer(0)
+---print(timer:stringValue())
+---```
 ---Since: 1.5.8
 ---@return string value # value
 function Timer:stringValue() end
 
 ---Get / Set the timer value.
+---```lua
+---timer = model.getTimer(0)
+---print(timer:value())
+---```
 ---Since: 1.1.0
 ---@return integer value # value
 function Timer:value() end
 
 ---Get / Set the voice used by the timer.
+---```lua
+---timer = model.getTimer(0)
+---timer:voice(0)
+---```
 ---Since: 26.1.0
 ---@param voice? integer
 ---@return integer voice # voice
@@ -1786,6 +2038,9 @@ function bluetooth.write(handle, value) end
 crsf = {}
 
 ---Return a sensor.
+---```lua
+---local sensor = crsf.getSensor()
+---```
 ---Since: 1.6.0
 ---@return CrsfSensor sensor # sensor
 function crsf.getSensor() end
@@ -1794,6 +2049,9 @@ function crsf.getSensor() end
 form = {}
 
 ---Add a bitmap field to the current form.
+---```lua
+---form.addBitmapField(line, nil, "/bitmaps/models", function() return bitmap end, function(newValue) bitmap = newValue end)
+---```
 ---Since: 1.2.11
 ---@param line FormLine # the line where the field should be added
 ---@param rect? Rect|nil # the coordinates
@@ -1804,6 +2062,9 @@ form = {}
 function form.addBitmapField(line, rect, path, getValue, setValue) end
 
 ---Add a boolean field to the current form.
+---```lua
+---form.addBooleanField(line, nil, function() return value end, function(newValue) value = newValue end)
+---```
 ---Since: 1.1.0
 ---@param line FormLine # the line where the field should be added
 ---@param rect? Rect|nil # the coordinates
@@ -1813,6 +2074,9 @@ function form.addBitmapField(line, rect, path, getValue, setValue) end
 function form.addBooleanField(line, rect, getValue, setValue) end
 
 ---Add a button to the current form.
+---```lua
+---form.addButton(line, nil, {text="Text Button", icon="", press=function() end})
+---```
 ---Since: 1.5.10
 ---@param line FormLine # the line where the field should be added
 ---@param rect? Rect|nil # the coordinates
@@ -1821,6 +2085,9 @@ function form.addBooleanField(line, rect, getValue, setValue) end
 function form.addButton(line, rect, params) end
 
 ---Add a choice field to the current form.
+---```lua
+---form.addChoiceField(line, nil, values, function() return value end, function(newValue) value = newValue end)
+---```
 ---Since: 1.1.0
 ---@param line FormLine # the line where the field should be added
 ---@param rect? Rect|nil # the coordinates
@@ -1831,6 +2098,9 @@ function form.addButton(line, rect, params) end
 function form.addChoiceField(line, rect, values, getValue, setValue) end
 
 ---Add a color field to the current form.
+---```lua
+---form.addColorField(line, nil, function() return color end, function(newValue) color = newValue end)
+---```
 ---Since: 1.1.0
 ---@param line FormLine # the line where the field should be added
 ---@param rect? Rect|nil # the coordinates
@@ -1840,12 +2110,20 @@ function form.addChoiceField(line, rect, values, getValue, setValue) end
 function form.addColorField(line, rect, getValue, setValue) end
 
 ---Add an Expansion Panel to the current form.
+---```lua
+---panel = form.addExpansionPanel("Label")
+---panel:addLine("Label")
+---panel:open(false) -- by default the panel is open, let's keep it closed!
+---```
 ---Since: 1.4.0
 ---@param text string # the displayed text
 ---@return ExpansionPanel result # The new field
 function form.addExpansionPanel(text) end
 
 ---Add a file field to the current form.
+---```lua
+---form.addFileField(line, nil, "/audio/en/system", "audio", function() return filename end, function(newValue) filename = newValue end)
+---```
 ---Since: 1.5.5
 ---@param line FormLine # the line where the field should be added
 ---@param rect? Rect|nil # the coordinates
@@ -1857,6 +2135,9 @@ function form.addExpansionPanel(text) end
 function form.addFileField(line, rect, path, fileType, getValue, setValue) end
 
 ---Add a function switch widget.
+---```lua
+---form.addFunctionSwitch(nil, {x=0, y=0}, 0)
+---```
 ---Since: 1.6.3
 ---@param line? FormLine|nil # the line where the widget should be added
 ---@param rect? Rect|nil # the coordinates
@@ -1865,6 +2146,11 @@ function form.addFileField(line, rect, path, fileType, getValue, setValue) end
 function form.addFunctionSwitch(line, rect, index) end
 
 ---Add a new line to the current form.
+---```lua
+---form.addLine("Label")
+---form.addLine("Label", panel, false) -- add a line in an expansion panel
+---form.addLine("Label", nil, false) -- no separator
+---```
 ---Since: 1.1.0
 ---@param label string # the line label
 ---@param panel? ExpansionPanel|nil # an expansion panel where the line should be inserted
@@ -1873,6 +2159,12 @@ function form.addFunctionSwitch(line, rect, index) end
 function form.addLine(label, panel, separator) end
 
 ---Add a number field to the current form.
+---```lua
+---local myField = form.addNumberField(line, nil, minValue, maxValue, function() return value end, function(newValue) value = newValue end)
+---myField:suffix("mAh")
+---myField:default(0)
+---myField:step(2)
+---```
 ---Since: 1.1.0
 ---@param line FormLine # the line where the field should be added
 ---@param rect? Rect|nil # the coordinates
@@ -1884,6 +2176,9 @@ function form.addLine(label, panel, separator) end
 function form.addNumberField(line, rect, min, max, getValue, setValue) end
 
 ---Add a pot widget.
+---```lua
+---form.addPot(nil, {x=0, y=0})
+---```
 ---Since: 1.6.3
 ---@param line? FormLine|nil # the line where the widget should be added
 ---@param rect? Rect|nil # the coordinates
@@ -1893,6 +2188,10 @@ function form.addNumberField(line, rect, min, max, getValue, setValue) end
 function form.addPot(line, rect, index, type) end
 
 ---Add the radio hardware widget (sticks / pots / sliders / switches)
+---```lua
+---local w, h = lcd.getWindowSize()
+---form.addRadioHardware(nil, {x=0, y=0, w=w, h=h})
+---```
 ---Since: 1.6.3
 ---@param line? FormLine|nil # the line where the widget should be added
 ---@param rect? Rect|nil # the coordinates
@@ -1900,6 +2199,9 @@ function form.addPot(line, rect, index, type) end
 function form.addRadioHardware(line, rect) end
 
 ---Add a rotary encoder widget.
+---```lua
+---form.addRotaryEncoder(nil, {x=0, y=0})
+---```
 ---Since: 26.1.0
 ---@param line? FormLine|nil # the line where the widget should be added
 ---@param rect? Rect|nil # the coordinates
@@ -1907,6 +2209,9 @@ function form.addRadioHardware(line, rect) end
 function form.addRotaryEncoder(line, rect) end
 
 ---Add a sensor field to the current form.
+---```lua
+---form.addSensorField(line, nil, function() return switch end, function(newValue) switch = newValue end)
+---```
 ---Since: 1.5.4
 ---@param line FormLine # the line where the field should be added
 ---@param rect? Rect|nil # the coordinates
@@ -1917,6 +2222,9 @@ function form.addRotaryEncoder(line, rect) end
 function form.addSensorField(line, rect, getValue, setValue, filterValue) end
 
 ---Add a slider field to the current form.
+---```lua
+---form.addSliderField(line, nil, 0, 100, function() return value end, function(newValue) value = newValue end)
+---```
 ---Since: 1.5.2
 ---@param line FormLine # the line where the field should be added
 ---@param rect? Rect|nil # the coordinates
@@ -1928,6 +2236,9 @@ function form.addSensorField(line, rect, getValue, setValue, filterValue) end
 function form.addSliderField(line, rect, min, max, getValue, setValue) end
 
 ---Add a source field to the current form.
+---```lua
+---form.addSourceField(line, nil, function() return source end, function(newValue) source = newValue end)
+---```
 ---Since: 1.1.0
 ---@param line FormLine # the line where the field should be added
 ---@param rect? Rect|nil # the coordinates
@@ -1937,6 +2248,9 @@ function form.addSliderField(line, rect, min, max, getValue, setValue) end
 function form.addSourceField(line, rect, getValue, setValue) end
 
 ---Add a static text to the current form.
+---```lua
+---form.addStaticText(line, nil, "Static Text")
+---```
 ---Since: 1.1.0
 ---@param line FormLine # the line where the text should be added
 ---@param rect? Rect|nil # the coordinates
@@ -1945,6 +2259,9 @@ function form.addSourceField(line, rect, getValue, setValue) end
 function form.addStaticText(line, rect, text) end
 
 ---Add a stick widget.
+---```lua
+---form.addStick(nil, {x=0, y=0}, 0, 1)
+---```
 ---Since: 1.6.3
 ---@param line? FormLine|nil # the line where the widget should be added
 ---@param rect? Rect|nil # the coordinates
@@ -1954,6 +2271,9 @@ function form.addStaticText(line, rect, text) end
 function form.addStick(line, rect, xIndex, yIndex) end
 
 ---Add a switch widget.
+---```lua
+---form.addSwitch(nil, {x=0, y=0}, 0, "push")
+---```
 ---Since: 1.6.3
 ---@param line? FormLine|nil # the line where the widget should be added
 ---@param rect? Rect|nil # the coordinates
@@ -1963,6 +2283,9 @@ function form.addStick(line, rect, xIndex, yIndex) end
 function form.addSwitch(line, rect, index, type) end
 
 ---Add a switch field to the current form.
+---```lua
+---form.addSwitchField(line, nil, function() return switch end, function(newValue) switch = newValue end)
+---```
 ---Since: 1.1.0
 ---@param line FormLine # the line where the field should be added
 ---@param rect? Rect|nil # the coordinates
@@ -1972,6 +2295,9 @@ function form.addSwitch(line, rect, index, type) end
 function form.addSwitchField(line, rect, getValue, setValue) end
 
 ---Add a text button to the current form (deprecated)
+---```lua
+---form.addTextButton(line, nil, "Text Button", function() end)
+---```
 ---Since: 1.1.0
 ---@deprecated
 ---@param line FormLine # the line where the field should be added
@@ -1982,6 +2308,11 @@ function form.addSwitchField(line, rect, getValue, setValue) end
 function form.addTextButton(line, rect, text, press) end
 
 ---Add a text field to the current form.
+---```lua
+---form.addTextField(line, nil, function() return text end, function(newValue) text = newValue end)
+---form.addTextField(line, {x=200, y=0, w=100, h=40}, function() return text end, function(newValue) text = newValue end)
+---form.addTextField(line, form.getFieldSlots(line, {100, 0, "slot3"})[0], function() return text end, function(newValue) text = newValue end)
+---```
 ---Since: 1.1.0
 ---@param line FormLine # the line where the field should be added
 ---@param rect? Rect|nil # the coordinates
@@ -1991,6 +2322,9 @@ function form.addTextButton(line, rect, text, press) end
 function form.addTextField(line, rect, getValue, setValue) end
 
 ---Add a time field to the current form.
+---```lua
+---form.addTimeField(line, nil, function() return time end, function(newValue) time = newValue end)
+---```
 ---Since: 26.1.0
 ---@param line FormLine # the line where the field should be added
 ---@param rect? Rect|nil # the coordinates
@@ -2000,6 +2334,9 @@ function form.addTextField(line, rect, getValue, setValue) end
 function form.addTimeField(line, rect, getValue, setValue) end
 
 ---Add a trim widget.
+---```lua
+---form.addTrim(nil, {x=0, y=0}, 0, "vertical")
+---```
 ---Since: 1.6.3
 ---@param line? FormLine|nil # the line where the widget should be added
 ---@param rect? Rect|nil # the coordinates
@@ -2009,6 +2346,9 @@ function form.addTimeField(line, rect, getValue, setValue) end
 function form.addTrim(line, rect, index, type) end
 
 ---Clear the current form.
+---```lua
+---form.clear()
+---```
 ---Since: 1.1.0
 function form.clear() end
 
@@ -2017,6 +2357,10 @@ function form.clear() end
 function form.create() end
 
 ---Return a table of coordinates for fields in a line.
+---```lua
+---form.getFieldSlots(line, nil)
+---form.getFieldSlots(line, {100, 0, "slot3"})
+---```
 ---Since: 1.1.0
 ---@param line FormLine # the line where the field should be added
 ---@param fields nil|table # table of specs for each field in the line (either a string, or a width). The available space will be splitted into all cells where specs have a zero-width
@@ -2024,6 +2368,9 @@ function form.create() end
 function form.getFieldSlots(line, fields) end
 
 ---Get the height of the current form.
+---```lua
+---print(form.height())
+---```
 ---Since: 1.5.7
 function form.height() end
 
@@ -2032,12 +2379,46 @@ function form.height() end
 function form.invalidate() end
 
 ---Open a dialog.
+---```lua
+---local buttons = {
+---{label="OK", action=function() return true end},
+---{label="Cancel", action=function() return true end},
+---{label="Nothing", action=function() return false end},
+---}
+---local dialog = form.openDialog({
+---title="Dialog demo",
+---message="This is a demo to show how to use LUA Message Dialog",
+---width=500,
+---buttons=buttons,
+---options=TEXT_LEFT,
+---wakeup=function()
+---print("dialog wakeup ...")
+---end,
+---paint=function()
+---lcd.drawText(10, 10, "Text overlay!")
+---end,
+---closeWhenClickOutside=true
+---})
+---```
 ---Since: 1.1.0
 ---@param params table # table with elements: title, message, buttons, options, wakeup, paint, closeWhenClickOutside
 ---@return Dialog result # Dialog
 function form.openDialog(params) end
 
 ---Open a wait dialog.
+---```lua
+---local dialog = form.openWaitDialog({
+---title = "Wait demo",
+---message = "This is a first message",
+---progress = true,
+---wakeup = function() print("Wait Dialog wakeup ...") end,
+---close = function() print("Wait Dialog close ...") end
+---})
+---dialog:message("This is a second message")
+---dialog:value(50)
+---dialog:closeAllowed(false)
+---dialog:close()
+---```
 ---Since: 1.5.10
 ---@param params table # table with elements: title, message, progress, wakeup, close
 ---@return WaitDialog result # WaitDialog
@@ -2062,6 +2443,11 @@ glasses = {}
 function glasses.bitmap(x, y, bitmap) end
 
 ---Create a layout.
+---```lua
+---local function build(context)
+---context.layout = glasses.createLayout({x=10, y=10, w=100, h=100, bitmap={id=10, x=10, y=10}, text={x=10, y=100}, font=3, border=true})
+---end
+---```
 ---Since: 26.1.0
 ---@param params any # table with elements: x (integer): left y (integer): top w (integer): width h (integer): height text : table with elements: x (integer): text left y (integer): text top opacity (integer): text opacity font (integer): text font bitmap : table with elements: id (unsigned): bitmap ID x (integer): bitmap left y (integer): bitmap top border (boolean): layout border
 ---@return GlassesLayout result # the new layout
@@ -2163,6 +2549,11 @@ function lcd.drawLine(x1, y1, x2, y2) end
 function lcd.drawMask(x, y, mask) end
 
 ---Draw a number with units.
+---```lua
+---lcd.drawNumber(x, y, 121, UNIT_VOLT, 1, LEFT)
+---lcd.drawNumber(x, y, 12.121, UNIT_VOLT, 1, RIGHT)
+---lcd.drawNumber(x, y, 12.121, 0, 4, CENTERED)
+---```
 ---Since: 1.1.0
 ---@param x number # X coordinate
 ---@param y number # Y coordinate
@@ -2248,6 +2639,10 @@ function lcd.GREY(value, alpha) end
 function lcd.hasFocus() end
 
 ---Invalidate the window or a part of the window (it will be fully drawn on next LCD refresh)
+---```lua
+---lcd.invalidate()
+---lcd.invalidate(0, 0, 100, 100)
+---```
 ---Since: 1.1.0
 ---@param x? number # X coordinate
 ---@param y? number # Y coordinate
@@ -2256,16 +2651,25 @@ function lcd.hasFocus() end
 function lcd.invalidate(x, y, w, h) end
 
 ---Check if the window is configuring or not.
+---```lua
+---lcd.isConfiguring()
+---```
 ---Since: 26.1.0
 ---@return boolean configuring # configuring
 function lcd.isConfiguring() end
 
 ---Check if the window is swiping or not.
+---```lua
+---lcd.isSwiping()
+---```
 ---Since: 26.1.0
 ---@return boolean swiping # swiping
 function lcd.isSwiping() end
 
 ---Check if the window is visible on screen or not.
+---```lua
+---lcd.isVisible()
+---```
 ---Since: 1.5.0
 ---@return boolean visible # visible
 function lcd.isVisible() end
@@ -2342,25 +2746,60 @@ model = {}
 function model.bitmap(bitmap) end
 
 ---Create a curve.
+---```lua
+---local curve = model.createCurve()
+---curve:name("My Curve")
+---curve:type(CURVE_TYPE_EXPO)
+---curve:exp(60)
+---```
 ---Since: 1.1.0
 ---@return Curve result # the new curve
 function model.createCurve() end
 
 ---Create a logic switch.
+---```lua
+---local ls = model.createLogicSwitch()
+---ls:name("My Logic Switch")
+---ls:function(LS_FN_AND)
+---print(ls:value())
+---```
 ---Since: 26.1.0
 ---@return LogicSwitch result # the new logic switch
 function model.createLogicSwitch() end
 
 ---Create a mix.
+---```lua
+---local mix = model.createMix("free", {actions={{action="offset", condition=armSwitch, active=100, inactive=0}}})
+---```
 ---Since: 1.6.0
-function model.createMix() end
+---@param name string
+---@param params? table
+function model.createMix(name, params) end
 
 ---Create a sensor.
+---```lua
+---local sensor1 = model.createSensor({type=SENSOR_TYPE_SPORT, appId=0x0100, physId=0x10}) -- S.Port "Altitude" sensor
+---local sensor2 = model.createSensor({type=SENSOR_TYPE_CRSF, crsfId=0x14, subId=0}) -- CRSF "Tx RSSI" sensor
+---local sensor3 = model.createSensor({type=SENSOR_TYPE_DIY}) -- DIY sensor
+---sensor3:name("My sensor")
+---sensor3:unit(UNIT_KILOMETER)
+---sensor3:decimals(3)
+---sensor3:appId(0x0110)
+---sensor3:physId(0x10)
+---sensor3:value(100)
+---```
 ---Since: 1.5.5
+---@param params? table
 ---@return Source result # the source of the created sensor
-function model.createSensor() end
+function model.createSensor(params) end
 
 ---Create a timer.
+---```lua
+---local timer = model.createTimer()
+---timer:name("My Timer")
+---timer:direction(-1)
+---timer:value(60)
+---```
 ---Since: 1.1.0
 ---@return Timer result # the new timer
 function model.createTimer() end
@@ -2370,30 +2809,49 @@ function model.createTimer() end
 function model.dirty() end
 
 ---Return output channel information.
+---```lua
+---local channel = model.getChannel("Ch name")
+---local channel = model.getChannel(0)
+---```
 ---Since: 1.6.0
 ---@param name_or_index string|integer
 ---@return Channel result # channel
 function model.getChannel(name_or_index) end
 
 ---Return a curve by name or by index.
+---```lua
+---local curve = model.getCurve("My Curve")
+---local curve = model.getCurve(0)
+---```
 ---Since: 1.1.0
 ---@param name_or_index string|integer
 ---@return Curve result # curve
 function model.getCurve(name_or_index) end
 
 ---Return a logic switch by name or by index.
+---```lua
+---local ls = model.getLogicSwitch("Test")
+---local ls = model.getLogicSwitch(0)
+---```
 ---Since: 26.1.0
 ---@param name_or_index string|integer
 ---@return LogicSwitch result # logic switch
 function model.getLogicSwitch(name_or_index) end
 
 ---Return module information.
+---```lua
+---local module = model.getModule(0)
+---```
 ---Since: 1.5.0
 ---@param Index integer
 ---@return Module result # module
 function model.getModule(Index) end
 
 ---Return a timer by name or by index.
+---```lua
+---local timer = model.getTimer("Test")
+---local timer = model.getTimer(0)
+---```
 ---Since: 1.1.0
 ---@param name_or_index string|integer
 ---@return Timer result # timer
@@ -2416,6 +2874,11 @@ function model.name(name) end
 function model.path() end
 
 ---Reset Flight data.
+---```lua
+---local model.resetFlight()
+---local model.resetFlight("timers")
+---local model.resetFlight("telemetry")
+---```
 ---Since: 1.4.10
 ---@param context string
 function model.resetFlight(context) end
@@ -2424,6 +2887,9 @@ function model.resetFlight(context) end
 multimodule = {}
 
 ---Return a sensor.
+---```lua
+---local sensor = multimodule.getSensor()
+---```
 ---Since: 1.6.0
 ---@return MultimoduleSensor sensor # sensor
 function multimodule.getSensor() end
@@ -2432,6 +2898,13 @@ function multimodule.getSensor() end
 serial = {}
 
 ---Open a serial connection (only on TANDEM radios)
+---```lua
+---local conn = serial.open("sport", 9600, "8N1")
+---print(conn:empty())
+---print(conn:read())
+---conn:write(...)
+---conn:flush()
+---```
 ---Since: 1.1.0
 ---@param name string
 ---@param baudrate? any
@@ -2459,6 +2932,9 @@ function simulator.connectUsb(state) end
 function simulator.enterText(text) end
 
 ---Simulate S.Port telemetry.
+---```lua
+---simulator.injectSPortFrame({module=0, band=0, rx=0, physId=0x1B, primId=0x10, appId=0x6800, value=0x80})
+---```
 ---Since: 26.1.0
 ---@param frame table
 function simulator.injectSPortFrame(frame) end
@@ -2517,6 +2993,9 @@ function simulator.setAnalog(analog, value) end
 function simulator.setDateTime(table) end
 
 ---Enable / Disable debug.
+---```lua
+---simulator.setDebug("malloc", true)
+---```
 ---Since: 26.1.0
 ---@param command string # only "malloc" allowed
 ---@param value boolean
@@ -2553,6 +3032,14 @@ function simulator.turnRotaryEncoder(steps) end
 sport = {}
 
 ---Return a sensor.
+---```lua
+---local sensor = sport.getSensor()
+---local sensor = sport.getSensor(0x6800)
+---local sensor = sport.getSensor({primId=0x32})
+---local sensor = sport.getSensor({appId=0x6800})
+---local sensor = sport.getSensor({appIdStart=0x6800, appIdEnd=0x680F})
+---local sensor = sport.getSensor({module=0, band=0, rx=0, physId=0x1B, appId=0x6800})
+---```
 ---Since: 1.1.0
 ---@param appId integer # or table {module, band, rx, physId, appId}
 ---@return LuaSPortSensor sensor # sensor
@@ -2596,6 +3083,9 @@ function system.exit() end
 function system.getAudioVoice() end
 
 ---Get the result of the Latency test - for testing purposes only.
+---```lua
+---local result = system.getLatencyTestResult()
+---```
 ---Since: 26.1.0
 ---@return nil|number result # delay between request and response
 function system.getLatencyTestResult() end
@@ -2611,12 +3101,31 @@ function system.getLocale() end
 function system.getMemoryUsage() end
 
 ---Return a Source.
+---```lua
+---system.getSource("RSSI")
+---system.getSource({name="GPS", options=OPTION_LATITUDE})
+---system.getSource({name="VFR", module=0, band=0})
+---system.getSource(nil)
+---system.getSource(CATEGORY_NONE)
+---system.getSource(CATEGORY_ALWAYS_ON)
+---system.getSource({category=CATEGORY_TELEMETRY_SENSOR, appId=0x0F10})
+---system.getSource({category=CATEGORY_TELEMETRY_SENSOR, appIdStart=0x0F10, appIdEnd=0x0F1F})
+---system.getSource({category=CATEGORY_TELEMETRY_SENSOR, appId=0xF101, subId=0})
+---system.getSource({category=CATEGORY_TELEMETRY_SENSOR, crsfId=0x14, subIdStart=0, subIdEnd=1})
+---system.getSource({category=CATEGORY_TIMER, member=1, options=0})
+---system.getSource({category=CATEGORY_SYSTEM, member=MAIN_VOLTAGE})
+---system.getSource({category=CATEGORY_SYSTEM_EVENT, member=SYSTEM_EVENT_RSSI_LOW})
+---system.getSource({category=CATEGORY_FUNCTION_SWITCH, member=5})
+---```
 ---Since: 1.1.0
 ---@param name string|table # Source name or table {name, category, member, options}
 ---@return Source source # source
 function system.getSource(name) end
 
 ---Return the list of sources within a category.
+---```lua
+---system.getSources(CATEGORY_TELEMETRY_SENSOR)
+---```
 ---Since: 26.1.0
 ---@param category number
 ---@return Source[] sources # sources
@@ -2633,6 +3142,10 @@ function system.getStickMode() end
 function system.getVersion() end
 
 ---Return if the sensor discover is active.
+---```lua
+---print(system.isSensorDiscoverActive())
+---end
+---```
 ---Since: 1.6.4
 ---@return boolean result # Boolean
 function system.isSensorDiscoverActive() end
@@ -2649,6 +3162,16 @@ function system.killEvents(event) end
 function system.listFiles(directory) end
 
 ---Open a page.
+---```lua
+---system.openPage({system=nil}) -- System menu page
+---system.openPage({system=0}) -- System / File manager
+---system.openPage({model=nil}) -- Model menu page
+---system.openPage({model=0}) -- Model / Model select
+---system.openPage({home=0}) -- Home page 1
+---system.openPage({timer=0}) -- Timer 1 configuration
+---system.openPage({logicSwitch=0}) -- Logic switch 1 configuration
+---system.openPage({sensor=0}) -- Sensor 1 configuration
+---```
 ---Since: 26.1.0
 ---@param page? table # with elements: system (integer or nil): system page index or nil for the menu page model (integer or nil): model page index or nil for the menu page home (integer, optional): home page index logicSwitch (integer, optional): logic switch page index timer (integer, optional): timer page index sensor (integer, optional): sensor page index
 function system.openPage(page) end
@@ -2659,6 +3182,10 @@ function system.openPage(page) end
 function system.playFile(audio) end
 
 ---Play haptic vibration.
+---```lua
+---system.playHaptic(200) -- Bzz during 200ms
+---system.playHaptic("- . -") -- Bzzz Bz Bzzz
+---```
 ---Since: 1.1.0
 ---@param ms number
 ---@param pattern string
@@ -2682,27 +3209,65 @@ function system.playNumber(value, unit, decimals, voice, priority) end
 function system.playTone(frequency, duration, pause) end
 
 ---Register the TBS Crossfire Module.
+---```lua
+---local function init()
+---system.registerCrossfireModule({configure = {name = "CRSF Configuration", create = create, wakeup = wakeup, event = event, close = close}})
+---end
+---```
 ---Since: 1.3.1
-function system.registerCrossfireModule() end
+---@param params table
+function system.registerCrossfireModule(params) end
 
 ---Register the ELRS Module.
+---```lua
+---local function init()
+---system.registerElrsModule({configure = {name = "ELRS Configuration", create = create, wakeup = wakeup, event = event, close = close}})
+---end
+---```
 ---Since: 1.3.1
-function system.registerElrsModule() end
+---@param params table
+function system.registerElrsModule(params) end
 
 ---Register the Ghost Module.
+---```lua
+---local function init()
+---system.registerGhostModule()
+---end
+---```
 ---Since: 1.3.0
 function system.registerGhostModule() end
 
 ---Register a Lua Layout.
+---```lua
+---local function init()
+---system.registerLayout({key="foo", widgets={
+---{x=10, y=10, w=100, h=100},
+---{x=120, y=120, w=100, h=100}}
+---})
+---end
+---
+---return {init=init}
+---```
 ---Since: 1.5.8
 ---@param params? any # table with elements: key (string): unique key, with 7 chars max widgets (table of rect, optional): layout widgets slots trims (table of rect, optional): layout trims slots pots (table of rect, optional): layout pots slots
 function system.registerLayout(params) end
 
 ---Register the mLRS Module.
+---```lua
+---local function init()
+---system.registerMlrsModule({configure = {name = "mLRS Configuration", create = create, wakeup = wakeup, event = event, close = close}})
+---end
+---```
 ---Since: 26.1.0
-function system.registerMlrsModule() end
+---@param params table
+function system.registerMlrsModule(params) end
 
 ---Register a Multimodule Protocol.
+---```lua
+---local function init()
+---system.registerMultimoduleProtocol("Hubsan", 2, {variants={"H107", "H301", "H501"}, minChannels=8, maxChannels=16})
+---end
+---```
 ---Since: 1.3.0
 ---@param label string # protocol name
 ---@param id any # protocol ID
@@ -2710,27 +3275,102 @@ function system.registerMlrsModule() end
 function system.registerMultimoduleProtocol(label, id, params) end
 
 ---Register a Lua Source.
+---```lua
+---local function init()
+---system.registerSource({key="LuaSrc", name="My source", init=init, wakeup=wakeup})
+---end
+---```
 ---Since: 1.1.0
 ---@param params? any # table with elements: key (string, 7 chars max): source key name (string or function): source name init (function, optional): handler called on source init done (function, optional): handler called on source stop wakeup (function, optional): handler called at each loop read (function, optional): optional read handler write (function, optional): optional write handler configure (function, optional): handler called on source configuration
 function system.registerSource(params) end
 
 ---Register a Lua System Tool.
+---```lua
+---local function init()
+---system.registerSystemTool({name=name, icon=icon, create=create, wakeup=wakeup, event=event, paint=paint})
+---end
+---```
 ---Since: 1.1.0
 ---@param params? any # table with elements: name (string or function): tool name icon (string): tool icon create (function, optional): handler called on widget creation, it will return the widget which is passed later to all functions wakeup (function, optional): handler called at each loop event (function, optional): handler called when an event is received (event not passed to the parent window if the handler returns True) paint (function, optional): paint function close (function, optional): handler called on page closed title (boolean, optional): title
 ---@return integer page_index # page index
 function system.registerSystemTool(params) end
 
 ---Register a Lua Task.
+---```lua
+---local function taskName()
+---return "My task name"
+---end
+---
+---local function taskInit()
+---print("Task Init ...")
+---end
+---
+---local function taskWakeup()
+---print("Task Wakeup ...")
+---end
+---
+---local function taskEvent(event)
+---print("Task Event", event)
+---end
+---
+---local function init()
+---system.registerTask({key="LuaTask", name=taskName, init=taskInit, wakeup=taskWakeup, event=taskEvent})
+---end
+---
+---return {init=init}
+---```
 ---Since: 1.5.0
 ---@param params? any # table with elements: key (string, 7 chars max): task key name (string or function): task name init (function, optional): handler called on task init done (function, optional): handler called on task stop event (function, optional): handler called at each event wakeup (function, optional): handler called at each loop read (function, optional): optional read handler write (function, optional): optional write handler configure (function, optional): handler called on task configuration
 function system.registerTask(params) end
 
 ---Register a Lua Theme.
+---```lua
+---local function init()
+---system.registerTheme({
+---key="dark2",
+---name="Dark alternative"
+---focusStyle="outline",
+---borderWidth=3,
+---roundButtons=false,
+---})
+---end
+---
+---return {init=init}
+---```
 ---Since: 26.1.0
 ---@param params? any # table with elements: key (string): unique key, with 7 chars max name (string or function): theme name focusStyle (string, default="invert"): focus style ("outline", "invert", or "color") borderWidth (number, default=2): widgets border width toolbarBackground (bitmap): top toolbar background bitmap toolbarLogo (bitmap): top toolbar logo colors (table): theme colors roundButtons (boolean, optional): whether to use round buttons or not
 function system.registerTheme(params) end
 
 ---Register a Lua Widget.
+---```lua
+----- Lua Sinus widget
+---local translations = {en="Lua Sinus", fr="Sinus Lua"}
+---
+---local function name(widget)
+---local locale = system.getLocale()
+---return translations[locale] or translations["en"]
+---end
+---
+---local function create()
+---return {color=lcd.RGB(0, 0, 255)}
+---end
+---
+---local function paint(widget)
+---local w, h = lcd.getWindowSize()
+---lcd.drawLine(0, h/2, w, h/2)
+---lcd.color(widget.color)
+---for i = 0,w do
+---local val = math.sin(i*math.pi/(w/2))
+---lcd.drawPoint(i, val*h/2+h/2)
+---end
+---end
+---
+---local function init()
+---system.registerWidget({key="sinus", name=name, create=create, paint=paint})
+---end
+---
+---return {init=init}
+---```
 ---Since: 1.1.0
 ---@param params? any # table with elements: key (string): unique key, with 7 chars max name (string or function): widget name create (function, optional): handler called when the widget is added to the model (created / read from storage), it will return the widget which is passed later to all functions destroy (function, optional): handler called on widget deletion configure (function, optional): handler called on widget configuration build (function, optional): handler called when the widget is built in the Home screen, after creation and configuration wakeup (function, optional): handler called at each loop event (function, optional): handler called when an event is received (event not passed to the parent window if the handler returns True) paint (function): paint function menu (function, optional): handler called when the contextual menu is created, to allow adding more options to the menu, the handler should return a table of pairs { name, function } read (function, optional): optional read handler write (function, optional): optional write handler persistent (boolean, optional): persistent data title (boolean, optional): title forced ON / OFF
 function system.registerWidget(params) end
@@ -2740,6 +3380,9 @@ function system.registerWidget(params) end
 function system.resetBacklightTimeout() end
 
 ---Launch the Latency test on one channel - for testing purposes only.
+---```lua
+---system.startLatencyTest(0, 100, 50) -- set CH1 value to +100% during 50ms and observe the delay with Trainer input (Bluetooth / S.Port / External module)
+---```
 ---Since: 26.1.0
 ---@param channel integer
 ---@param value number
