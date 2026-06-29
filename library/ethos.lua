@@ -575,10 +575,10 @@ function Module:enable() end
 
 ---Mute all "Sensor lost" warnings from a module during a certain duration.
 ---```lua
----system.muteSensorLost(0, 5.0) -- Sensor lost muted during 5 seconds
+---module.muteSensorLost(5.0) -- Sensor lost muted during 5 seconds
 ---```
 ---Since: 1.6.0
----@param duration any # in s (number)
+---@param duration any # in seconds (number)
 function Module:muteSensorLost(duration) end
 
 ---Get / Set one module option.
@@ -3115,6 +3115,7 @@ function system.getMemoryUsage() end
 ---system.getSource({category=CATEGORY_TIMER, member=1, options=0})
 ---system.getSource({category=CATEGORY_SYSTEM, member=MAIN_VOLTAGE})
 ---system.getSource({category=CATEGORY_SYSTEM_EVENT, member=SYSTEM_EVENT_RSSI_LOW})
+---system.getSource({category=CATEGORY_FUNCTION_SWITCH, member=5})
 ---```
 ---Since: 1.1.0
 ---@param name string|table # Source name or table {name, category, member, options}
